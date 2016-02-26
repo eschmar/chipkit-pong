@@ -105,11 +105,15 @@ void lightUpPixel(int x, int y) {
     game[offset * 128 + x] |= 1 << (y - offset * 8);
 }
 
-void drawPaddel(Paddle p) {
+void drawPaddle(Paddle p) {
     int i;
     for (i = 0; i < 8; i++) {
         lightUpPixel(p.x, p.y + i);
     }
+}
+
+void drawBall(Ball b) {
+    lightUpPixel(b.x, b.y);
 }
 
 void clearGame() {
@@ -123,11 +127,12 @@ void clearGame() {
 
 void draw(Paddle p1, Paddle p2, Ball ball) {
     int i, j;
-    
-    clearGame();
 
-    drawPaddel(p1);
-    drawPaddel(p2);
+    clearGame();
+    drawPaddle(p1);
+    drawPaddle(p2);
+    drawBall(ball);
+    
 
     for(i = 0; i < 4; i++) {
         DISPLAY_COMMAND_DATA_PORT &= ~DISPLAY_COMMAND_DATA_MASK;
