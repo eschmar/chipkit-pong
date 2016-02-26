@@ -4,14 +4,34 @@
 #include "display.h"
 #include "types.h"
 
-#define GAME_SPEED 100;
+#define GAME_SPEED 	100
+#define MAX_X		128
+#define MAX_Y		32
 
 Paddle p1, p2;
 Ball ball;
 
 void advance() {
-	ball.x = (ball.x + ball.speedX) % 128;
-	ball.y = (ball.y + ball.speedY) % 32;
+	ball.x = (ball.x + ball.speedX);
+	ball.y = (ball.y + ball.speedY);
+
+	// vertical collision detection
+	if (ball.y <= 0) {
+		ball.y = 0;
+		ball.speedY *= (-1);
+	}else if (ball.y >= MAX_Y - 1) {
+		ball.y = MAX_Y - 1;
+		ball.speedY *= (-1);
+	}
+
+	// horizontal collision detection
+	if (ball.x <= 0) {
+		ball.x = 0;
+		ball.speedX *= (-1);
+	}else if (ball.x >= MAX_X - 1) {
+		ball.x = MAX_X - 1;
+		ball.speedX *= (-1);
+	}
 }
 
 void init_game() {
@@ -23,8 +43,8 @@ void init_game() {
 
 	ball.x = 60;
 	ball.y = 15;
-	ball.speedX = 1;
-	ball.speedY = 0;	
+	ball.speedX = 2;
+	ball.speedY = 1;	
 }
 
 int main(void) {

@@ -133,7 +133,6 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
     drawPaddle(p2);
     drawBall(ball);
     
-
     for(i = 0; i < 4; i++) {
         DISPLAY_COMMAND_DATA_PORT &= ~DISPLAY_COMMAND_DATA_MASK;
         spi_send_recv(0x22);
