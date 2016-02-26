@@ -19,6 +19,8 @@
 #define DISPLAY_RESET_PORT PORTG
 #define DISPLAY_RESET_MASK 0x200
 
+uint8_t game[128*4] = {0};
+
 void delay(int cyc) {
     int i;
     for(i = cyc; i > 0; i--);
@@ -96,8 +98,6 @@ void display_wakeup() {
     
     spi_send_recv(0xAF);
 }
-
-uint8_t game[128*4] = {0};
 
 void lightUpPixel(int x, int y) {
     short offset = 0;

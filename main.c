@@ -11,6 +11,10 @@
 Paddle p1, p2;
 Ball ball;
 
+int getbtns(void){
+    return (PORTD & (0x7 << 5)) >> 5;
+}
+
 void advance() {
 	ball.x = (ball.x + ball.speedX);
 	ball.y = (ball.y + ball.speedY);
@@ -54,6 +58,9 @@ int main(void) {
 	init_game();
 	draw(p1, p2, ball);
 
+	// setup buttons
+	TRISD |= (0x3f << 5);
+
 	// setup timers
     enableTimer2(31250, 0x1B, 0x111, 1);
     
@@ -87,6 +94,7 @@ void core_interrupt_handler(void) {
 	// clear interrupt flag
     IFSCLR(0) = 0x100;
 
+    // game
     counter--;
     if (counter == 0)
     {
@@ -94,4 +102,16 @@ void core_interrupt_handler(void) {
 	    draw(p1, p2, ball);
 	    counter = GAME_SPEED;
     }
+
+    // controllers
+    int btnVal = getbtns();
+    if (btnVal == 2) {
+    	// up
+    	if (p1.y > 0) { p1.y -= 1; } 
+
+    }else if (btnVal == 4) {
+    	// down
+    	if (p1.y < 23) { p1.y += 1; } 
+    }
 }
+
