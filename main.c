@@ -104,14 +104,16 @@ void core_interrupt_handler(void) {
     }
 
     // controllers
-    int btnVal = getbtns();
-    if (btnVal == 2) {
-    	// up
-    	if (p1.y > 0) { p1.y -= 1; } 
+    if (counter == 0 || counter == GAME_SPEED / 2) {
+	    int btnVal = getbtns();
+	    if (btnVal == 2) {
+	    	// up
+	    	if (p1.y > 0) { p1.y -= 1; } 
 
-    }else if (btnVal == 4) {
-    	// down
-    	if (p1.y < 23) { p1.y += 1; } 
-    }
+	    }else if (btnVal == 4) {
+	    	// down
+	    	if (p1.y < 23) { p1.y += 1; } 
+	    }
+    }    
 }
 
