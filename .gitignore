@@ -1,0 +1,10 @@
+*.o
+*.a
+*.elf
+*.hex
+.deps
+
+*.sublime-project
+*.sublime-workspace
+
+pic32mx.h
