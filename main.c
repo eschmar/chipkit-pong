@@ -53,7 +53,7 @@ void init_game() {
 	p1.score = 0;
 
 	p2.x = 127;
-	p2.y = 12;
+	p2.y = 5;
 	p2.score = 0;
 
 	ball.x = 60;
@@ -122,11 +122,11 @@ void core_interrupt_handler(void) {
 	    int btnVal = getButtonInput();
 	    if (btnVal == 2) {
 	    	// up
-	    	if (p1.y > 0) { p1.y -= 1; } 
+	    	if (p1.y > 0) { p1.y -= 1; p2.y -= 1; } 
 
 	    }else if (btnVal == 4) {
 	    	// down
-	    	if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; } 
+	    	if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; p2.y += 1; } 
 	    }
     }    
 }
