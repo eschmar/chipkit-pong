@@ -31,13 +31,13 @@ void advance() {
 	// horizontal collision detection
 	if (ball.x <= 0) {
 		// score for p1?
-		if (ball.y < p1.y || ball.y > p1.y + PADDLE_HEIGHT - 1) { p1.score += 1; }
+		if (ball.y < p1.y || ball.y > p1.y + PADDLE_HEIGHT - 1) { p2.score += 1; }
 
 		ball.x = 0;
 		ball.speedX *= (-1);
 	}else if (ball.x >= MAX_X - 1) {
 		// score for p1?
-		if (ball.y < p2.y || ball.y > p2.y + PADDLE_HEIGHT - 1) { p2.score += 1; }
+		if (ball.y < p2.y || ball.y > p2.y + PADDLE_HEIGHT - 1) { p1.score += 1; }
 
 		ball.x = MAX_X - 1;
 		ball.speedX *= (-1);
