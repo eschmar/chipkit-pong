@@ -4,9 +4,10 @@
 #include "display.h"
 #include "types.h"
 
-#define GAME_SPEED 	100
-#define MAX_X		128
-#define MAX_Y		32
+#define GAME_SPEED 		100
+#define MAX_X			128
+#define MAX_Y			32
+#define PADDLE_HEIGHT	8
 
 Paddle p1, p2;
 Ball ball;
@@ -30,9 +31,15 @@ void advance() {
 
 	// horizontal collision detection
 	if (ball.x <= 0) {
+		// score for p1?
+		if (ball.y < p1.y || ball.y > p1.y + PADDLE_HEIGHT - 1) { p1.score += 1; }
+
 		ball.x = 0;
 		ball.speedX *= (-1);
 	}else if (ball.x >= MAX_X - 1) {
+		// score for p1?
+		if (ball.y < p2.y || ball.y > p2.y + PADDLE_HEIGHT - 1) { p2.score += 1; }
+
 		ball.x = MAX_X - 1;
 		ball.speedX *= (-1);
 	}
@@ -41,9 +48,11 @@ void advance() {
 void init_game() {
 	p1.x = 0;
 	p1.y = 5;
+	p1.score = 0;
 
 	p2.x = 127;
 	p2.y = 12;
+	p2.score = 0;
 
 	ball.x = 60;
 	ball.y = 15;
@@ -112,7 +121,7 @@ void core_interrupt_handler(void) {
 
 	    }else if (btnVal == 4) {
 	    	// down
-	    	if (p1.y < 23) { p1.y += 1; } 
+	    	if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; } 
 	    }
     }    
 }
