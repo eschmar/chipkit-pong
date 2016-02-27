@@ -10,6 +10,10 @@
 
 #include <pic32mx.h>
 
+int getButtonInput(void){
+    return (PORTD & (0x7 << 5)) >> 5;
+}
+
 void enableMultiVectorMode() {
     INTCONSET = 0x1000;
 }

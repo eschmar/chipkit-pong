@@ -12,10 +12,9 @@
 Paddle p1, p2;
 Ball ball;
 
-int getbtns(void){
-    return (PORTD & (0x7 << 5)) >> 5;
-}
-
+/*
+ *	One frame of the game
+ */
 void advance() {
 	ball.x = (ball.x + ball.speedX);
 	ball.y = (ball.y + ball.speedY);
@@ -45,6 +44,9 @@ void advance() {
 	}
 }
 
+/*
+ *	Set up game configuration
+ */
 void init_game() {
 	p1.x = 0;
 	p1.y = 5;
@@ -60,6 +62,9 @@ void init_game() {
 	ball.speedY = 1;	
 }
 
+/*
+ *	Initialise
+ */
 int main(void) {
 	spi_init();
 	display_wakeup();
@@ -100,7 +105,7 @@ int counter = GAME_SPEED;
  * ISR general interrupt handler
  */
 void core_interrupt_handler(void) {
-	// clear interrupt flag
+	// clear t2 interrupt flag
     IFSCLR(0) = 0x100;
 
     // game
@@ -114,7 +119,7 @@ void core_interrupt_handler(void) {
 
     // controllers
     if (counter == 0 || counter == GAME_SPEED / 2) {
-	    int btnVal = getbtns();
+	    int btnVal = getButtonInput();
 	    if (btnVal == 2) {
 	    	// up
 	    	if (p1.y > 0) { p1.y -= 1; } 

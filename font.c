@@ -1,7 +1,7 @@
 #include "font.h"
 #include <stdint.h>
 
-static const uint8_t const font[] = {
+const uint8_t const font[] = {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0,
