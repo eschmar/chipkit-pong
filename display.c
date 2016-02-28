@@ -178,7 +178,10 @@ void drawScore(Paddle p1, Paddle p2) {
     }
 }
 
-void drawFromArray(uint8_t arr[]) {
+/**
+ *  Renders the full screen
+ */
+void renderScreen(uint8_t arr[]) {
     int i, j;
     
     for(i = 0; i < 4; i++) {
@@ -208,12 +211,12 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
     drawBall(ball);
     drawScore(p1, p2);
     
-    drawFromArray(game);
+    renderScreen(game);
 }
 
 /*
- *  Send the next frame to the display
+ *  Starting screen
  */
-void drawLogo(Paddle p1, Paddle p2, Ball ball) {
-    drawFromArray(logo);
+void drawLogo() {
+    renderScreen(logo);
 }
