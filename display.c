@@ -178,33 +178,6 @@ void drawScore(Paddle p1, Paddle p2) {
     }
 }
 
-/*
- *  Send the next frame to the display
- */
-void draw(Paddle p1, Paddle p2, Ball ball) {
-    int i, j;
-
-    clearGame();
-    drawPaddle(p1);
-    drawPaddle(p2);
-    drawBall(ball);
-    drawScore(p1, p2);
-    
-    for(i = 0; i < 4; i++) {
-        DISPLAY_COMMAND_DATA_PORT &= ~DISPLAY_COMMAND_DATA_MASK;
-        spi_send_recv(0x22);
-        spi_send_recv(i);
-
-        spi_send_recv(0 & 0xF);
-        spi_send_recv(0x10 | ((0 >> 4) & 0xF));
-
-        DISPLAY_COMMAND_DATA_PORT |= DISPLAY_COMMAND_DATA_MASK;
-
-        for(j = 0; j < 128; j++)
-            spi_send_recv(game[i*128 + j]);
-    }
-}
-
 void drawFromArray(uint8_t arr[]) {
     int i, j;
     
@@ -223,7 +196,20 @@ void drawFromArray(uint8_t arr[]) {
     }
 }
 
+/*
+ *  Send the next frame to the display
+ */
+void draw(Paddle p1, Paddle p2, Ball ball) {
+    int i, j;
 
+    clearGame();
+    drawPaddle(p1);
+    drawPaddle(p2);
+    drawBall(ball);
+    drawScore(p1, p2);
+    
+    drawFromArray(game);
+}
 
 /*
  *  Send the next frame to the display

@@ -8,3 +8,4 @@
 *.sublime-workspace
 
 pic32mx.h
+*.psd
