@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <pic32mx.h>
-#include "font.h"
+#include "assets.h"
 #include "types.h"
 
 #define DISPLAY_VDD PORTFbits.RF6
@@ -205,3 +205,29 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
     }
 }
 
+void drawFromArray(uint8_t arr[]) {
+    int i, j;
+    
+    for(i = 0; i < 4; i++) {
+        DISPLAY_COMMAND_DATA_PORT &= ~DISPLAY_COMMAND_DATA_MASK;
+        spi_send_recv(0x22);
+        spi_send_recv(i);
+
+        spi_send_recv(0 & 0xF);
+        spi_send_recv(0x10 | ((0 >> 4) & 0xF));
+
+        DISPLAY_COMMAND_DATA_PORT |= DISPLAY_COMMAND_DATA_MASK;
+
+        for(j = 0; j < 128; j++)
+            spi_send_recv(arr[i*128 + j]);
+    }
+}
+
+
+
+/*
+ *  Send the next frame to the display
+ */
+void drawLogo(Paddle p1, Paddle p2, Ball ball) {
+    drawFromArray(logo);
+}

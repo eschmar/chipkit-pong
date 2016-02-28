@@ -1,6 +1,6 @@
 #include <pic32mx.h>
 #include "helpers.h"
-#include "font.h"
+#include "assets.h"
 #include "display.h"
 #include "types.h"
 
@@ -68,6 +68,9 @@ void init_game() {
 int main(void) {
 	spi_init();
 	display_wakeup();
+
+	drawLogo();
+	delay(9000000);
 
 	init_game();
 	draw(p1, p2, ball);
