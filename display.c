@@ -157,9 +157,9 @@ void clearGame() {
  */
 void drawScore(Paddle p1, Paddle p2) {
     int i, x = 52;
-    char c = p1.score + '0';
     p1.score = p1.score % 128;
     p2.score = p2.score % 128;
+    char c = p1.score + '0';
 
     for (i = 0; i < 8; i++) {
         game[x + i] = font[c * 8 + i];
