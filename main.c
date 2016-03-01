@@ -120,7 +120,7 @@ void core_interrupt_handler(void) {
             draw(p1, p2, ball);
             break;
         case STATE_START:
-            if (btnVal & 0x1 == 1) {
+            if (btnVal & 0x4) {
                 gameState = STATE_PONG;
                 draw(p1, p2, ball);
             }
@@ -130,16 +130,14 @@ void core_interrupt_handler(void) {
             break;
     }
 
-    // controllers
-    if (counter == 0 || counter == GAME_SPEED / 2) {        
-        if (btnVal == 2) {
-            // up
-            if (p1.y > 0) { p1.y -= 1; p2.y -= 1; } 
+    // controllers    
+    if (btnVal == 2) {
+        // up
+        if (p1.y > 0) { p1.y -= 1; p2.y -= 1; } 
 
-        }else if (btnVal == 4) {
-            // down
-            if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; p2.y += 1; } 
-        }
-    }    
+    }else if (btnVal == 4) {
+        // down
+        if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; p2.y += 1; } 
+    } 
 }
 
