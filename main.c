@@ -126,6 +126,9 @@ void core_interrupt_handler(void) {
             }
             break;
         case STATE_END:
+
+            
+
             // TODO: show who won.
             break;
     }

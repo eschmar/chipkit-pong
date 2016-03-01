@@ -5,5 +5,6 @@
 
 extern const uint8_t const font[];
 extern const uint8_t const logo[];
+extern const uint8_t const minion[];
 
 #endif // FONT_H_

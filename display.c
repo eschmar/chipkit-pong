@@ -218,5 +218,5 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
  *  Starting screen
  */
 void drawLogo() {
-    renderScreen(logo);
+    renderScreen(minion);
 }
