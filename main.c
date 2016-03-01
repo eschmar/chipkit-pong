@@ -4,10 +4,11 @@
 #include "display.h"
 #include "types.h"
 
-#define GAME_SPEED      100
-#define MAX_X           128
-#define MAX_Y           32
-#define PADDLE_HEIGHT   8
+#define GAME_SPEED          100
+#define GAME_WIN_SCORE    3
+#define MAX_X               128
+#define MAX_Y               32
+#define PADDLE_HEIGHT       8
 
 #define STATE_START     0
 #define STATE_PONG      1
@@ -46,6 +47,12 @@ void advance() {
 
         ball.x = MAX_X - 1;
         ball.speedX *= (-1);
+    }
+
+    // game end?
+    if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
+        gameState = STATE_END;
+        drawEnding();
     }
 }
 
@@ -121,14 +128,16 @@ void core_interrupt_handler(void) {
             break;
         case STATE_START:
             if (btnVal & 0x4) {
+                init_game();
                 gameState = STATE_PONG;
                 draw(p1, p2, ball);
             }
             break;
         case STATE_END:
-
-            
-
+            if (btnVal & 0x4) {
+                gameState = STATE_START;
+                drawLogo();
+            }
             // TODO: show who won.
             break;
     }
