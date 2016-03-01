@@ -48,12 +48,6 @@ void advance() {
         ball.x = MAX_X - 1;
         ball.speedX *= (-1);
     }
-
-    // game end?
-    if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
-        gameState = STATE_END;
-        drawEnding();
-    }
 }
 
 /*
@@ -125,6 +119,12 @@ void core_interrupt_handler(void) {
         case STATE_PONG:
             advance();
             draw(p1, p2, ball);
+
+            // game end?
+            if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
+                gameState = STATE_END;
+                drawEnding(p1, p2);
+            }
             break;
         case STATE_START:
             if (btnVal & 0x4) {

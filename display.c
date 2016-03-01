@@ -178,6 +178,36 @@ void drawScore(Paddle p1, Paddle p2) {
     }
 }
 
+/*
+ *  Print who won
+ */
+void drawWinner(Paddle p1, Paddle p2) {
+    int winner = p1.score > p2.score ? 1 : 2;
+    int i, c, x = 64;
+    char sequence[] = {'P', 'l', 'a', 'y', 'e', 'r', ' ', winner + '0', '!'};
+
+    for (c = 0; c < sizeof(sequence); c++) {
+        for (i = 0; i < 8; i++) {
+            game[x + c * 8 + i] = font[sequence[c] * 8 + i];
+        }
+    }
+}
+
+/*
+ *  Print who won inverted
+ */
+void drawWinnerInverted(Paddle p1, Paddle p2) {
+    int winner = p1.score > p2.score ? 1 : 2;
+    int i, c, x = 64;
+    char sequence[] = {'P', 'l', 'a', 'y', 'e', 'r', ' ', winner + '0', '!'};
+
+    for (c = 0; c < sizeof(sequence); c++) {
+        for (i = 0; i < 8; i++) {
+            game[x + c * 8 + i] = ~font[sequence[c] * 8 + i];
+        }
+    }
+}
+
 /**
  *  Renders the full screen
  */
@@ -224,8 +254,9 @@ void drawLogo() {
 /*
  *  Ending Screen
  */
-void drawEnding() {
+void drawEnding(Paddle p1, Paddle p2) {
     renderScreen(minion);
+    drawWinnerInverted(p1, p2);
 }
 
 
