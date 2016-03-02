@@ -164,9 +164,9 @@ void core_interrupt_handler(void) {
         p1.y = ADCValueP1 / 42;
         p2.y = ADCValueP2 / 42;
     } else {
-        // int ADCValueP1 = ADC1BUF8;
-        // int ADCValueP2 = ADC1BUF9;
-        // p1.y = ADCValueP1 / 42;
-        // p2.y = ADCValueP2 / 42;
+        int ADCValueP1 = ADC1BUF8;
+        int ADCValueP2 = ADC1BUF9;
+        p1.y = ADCValueP1 / 42;
+        p2.y = ADCValueP2 / 42;
     }
 }

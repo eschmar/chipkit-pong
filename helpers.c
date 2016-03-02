@@ -3,10 +3,10 @@
 /*
  * Timer3 registers
  */
-#define T3CON 		PIC32_R (0x0A00)
-#define T3CONSET 	PIC32_R (0x0A08)
-#define TMR3  		PIC32_R (0x0A10)
-#define PR3   		PIC32_R (0x0A20)
+#define T3CON       PIC32_R (0x0A00)
+#define T3CONSET    PIC32_R (0x0A08)
+#define TMR3        PIC32_R (0x0A10)
+#define PR3         PIC32_R (0x0A20)
 
 #include <pic32mx.h>
 

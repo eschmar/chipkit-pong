@@ -144,12 +144,8 @@ void drawBall(Ball b) {
  *  Reset display
  */
 void clearGame() {
-    int i,j;
-    for (i = 0; i < 128; i++) {
-        for (j = 0; j < 4; j++) {
-            game[j*128 + i] = 0;
-        }
-    }
+    int i;
+    for (i = 0; i < sizeof(game); i++) { game[i] = 0; }
 }
 
 /*
