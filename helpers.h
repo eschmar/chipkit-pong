@@ -6,5 +6,6 @@ void enableMultiVectorMode();
 void enableTimer2(int period, int priority, int prescaling, int interrupts);
 void enableTimer3(int period, int priority, int prescaling, int interrupts);
 void enableButtons();
+int isButtonPressed(int i);
 
 #endif // HELPERS_H_

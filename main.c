@@ -121,7 +121,6 @@ int counter = GAME_SPEED;
 void core_interrupt_handler(void) {
     // clear t2 interrupt flag
     IFSCLR(0) = 0x100;
-    int btnVal = getButtonInput();
     counter--;
 
     if (counter != 0) { return; }
@@ -139,18 +138,17 @@ void core_interrupt_handler(void) {
             }
             break;
         case STATE_START:
-            if (btnVal & 0x4) {
+            if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
                 draw(p1, p2, ball);
             }
             break;
         case STATE_END:
-            if (btnVal & 0x4) {
+            if (isButtonPressed(4)) {
                 gameState = STATE_START;
                 drawLogo();
             }
-            // TODO: show who won.
             break;
     }
 
@@ -166,9 +164,9 @@ void core_interrupt_handler(void) {
         p1.y = ADCValueP1 / 42;
         p2.y = ADCValueP2 / 42;
     } else {
-        int ADCValueP1 = ADC1BUF8;
-        int ADCValueP2 = ADC1BUF9;
-        p1.y = ADCValueP1 / 42;
-        p2.y = ADCValueP2 / 42;
+        // int ADCValueP1 = ADC1BUF8;
+        // int ADCValueP2 = ADC1BUF9;
+        // p1.y = ADCValueP1 / 42;
+        // p2.y = ADCValueP2 / 42;
     }
 }

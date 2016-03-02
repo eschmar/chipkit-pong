@@ -10,14 +10,52 @@
 
 #include <pic32mx.h>
 
+/**
+ * Setup port D as button input
+ */
+void enableButtons() {
+    TRISD |= (0x3f << 5);
+}
+
+/**
+ * Returns raw button values at port D
+ */
 int getButtonInput(void){
     return (PORTD & (0x7 << 5)) >> 5;
 }
 
+/**
+ * Returns if button was pressed and allows
+ * pressing of any length.
+ */
+int buttons[] = {0, 0, 0, 0, 0};
+int isButtonPressed(int i) {
+    int btnVal = getButtonInput();
+    int shift = (i > 1 && i < 5) ? (-2) + i : 0;
+    int pin = 0x1 << shift;
+    i--;
+
+    if (buttons[i] == 0 && btnVal & pin) {
+        buttons[i] = 1;
+        return 1;
+    }else if (buttons[i] == 1 && !(btnVal & pin)) {
+        buttons[i] = 0;
+    }
+
+    return 0;
+}
+
+/**
+ * Enables multi vector mode which allows
+ * multiple distinct interrupt handlers.
+ */
 void enableMultiVectorMode() {
     INTCONSET = 0x1000;
 }
 
+/**
+ *  Set up and start timer 2
+ */
 void enableTimer2(int period, int priority, int prescaling, int interrupts) {
     T2CON = 0x0;            // stop timer
     TMR2 = 0;               // clear timer
@@ -36,6 +74,9 @@ void enableTimer2(int period, int priority, int prescaling, int interrupts) {
     T2CONSET = 0x8000;
 }
 
+/**
+ *  Set up and start timer 3
+ */
 void enableTimer3(int period, int priority, int prescaling, int interrupts) {
     T3CON = 0x0;            // stop timer
     TMR3 = 0;               // clear timer
@@ -52,8 +93,4 @@ void enableTimer3(int period, int priority, int prescaling, int interrupts) {
     
     // enable
     T3CONSET = 0x8000;
-}
-
-void enableButtons() {
-    TRISD |= (0x3f << 5);
 }
