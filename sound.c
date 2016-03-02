@@ -1,3 +1,6 @@
+#include "sound.h"
+#include "freqmap.h"
+
 /*
  * Timer1 registers
  */
@@ -61,12 +64,33 @@ void disableTimer1(void) {
 	T1CON = 0x0;
 }
 
+int tempo = 100;
+
 /*
- * Generate sound with specific frequency (Hertz) and duration (millisec)
+ * Generate a pause of specified length (* tempo)
+ */
+void pause(int duration) {
+	mute();
+	int duration = duration * tempo;
+	int counter = 0;
+	enableTimer1();
+	while (counter == duration) {
+		if (IFS(0) & 0x0010) {
+			counter++;
+			IFSCLR(0) = 0x0010;
+		}
+	}
+	disableTimer1();
+}
+
+/*
+ * Generate sound with specific note and duration (* tempo)
  * The buzzer must be connected to PIN 3
  */
-void tone(int frequency, int duration) {
+void tone(int note, int duration) {
+	int duration = duration * tempo;
 	int counter = 0;
+	int frequency = 625000 / note;
 	int freqVol =  frequency / 2;		// Modify volume?
 
 	enableTimer3PWM(frequency, 6, freqVol);
@@ -80,9 +104,3 @@ void tone(int frequency, int duration) {
 	disableTimer1();
 	mute();
 }
-
-
-
-
-
-
