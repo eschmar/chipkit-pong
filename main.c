@@ -9,6 +9,7 @@
 #define MAX_X               128
 #define MAX_Y               32
 #define PADDLE_HEIGHT       8
+#define CONTROLLER_SPEED    40
 
 #define STATE_START     0
 #define STATE_PONG      1
@@ -81,45 +82,22 @@ int main(void) {
     // setup hardware
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
+    enableTimer3(31250, 0x1B, 0x111, 1);
+    setupPotentiometers();
+
+    enableMultiVectorMode();
     enable_interrupt();
-
-    // TODO: potentiometers
-    AD1PCFG = 0xFFE7;
-	AD1CON1 = 0x0000;
-	//AD1CHS = 0x04080000;
-
-	AD1CON1 = 0x04E4;
-	AD1CON2 = 0x0406;
-	AD1CON3 = 0x0F00;
-
-	AD1CSSL = 0x0110;
-	AD1CON1SET = 0x8000;
 
 	for(;;) ;
     return 0;
 }
 
+int counter = GAME_SPEED;
+
 /**
  * ISR Interrupt handler for timer 2
  */
 void timer2_interrupt_handler(void) {
-   
-}
-
-/**
- * ISR Interrupt handler for timer 3
- */
-void timer3_interrupt_handler(void) {
-   
-}
-
-int counter = GAME_SPEED;
-
-/**
- * ISR general interrupt handler
- */
-void core_interrupt_handler(void) {
-    // clear t2 interrupt flag
     IFSCLR(0) = 0x100;
     counter--;
 
@@ -151,22 +129,48 @@ void core_interrupt_handler(void) {
             }
             break;
     }
+}
 
-    // controllers
+int counterController = CONTROLLER_SPEED;
+
+/**
+ *  Linear mapping from [0,1023] to valid paddle position
+ */
+int translateToScreen(int val) {
+    return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
+}
+
+/**
+ * ISR Interrupt handler for timer 3
+ */
+void timer3_interrupt_handler(void) {
+    IFSCLR(0) = 0x1000;
+    counterController--;
+
+    if (counterController != 0) { return; }
+    counterController = CONTROLLER_SPEED;
+
+    int ADCValueP1, ADCValueP2;
+
+    // start sampling and wait to complete
     IFSCLR(1) = 0x0002;
     AD1CON1SET = 0x0004;
     while (!IFS(1) & 0x0002);
-    AD1CON1CLR = 0x0004;
     
+    // check which buffer to read from
     if (AD1CON2 & 0x0080) {
-        int ADCValueP1 = ADC1BUF0;
-        int ADCValueP2 = ADC1BUF1;
-        p1.y = ADCValueP1 / 42;
-        p2.y = ADCValueP2 / 42;
+        ADCValueP1 = ADC1BUF0;
+        ADCValueP2 = ADC1BUF1;
     } else {
-        int ADCValueP1 = ADC1BUF8;
-        int ADCValueP2 = ADC1BUF9;
-        p1.y = ADCValueP1 / 42;
-        p2.y = ADCValueP2 / 42;
+        ADCValueP1 = ADC1BUF8;
+        ADCValueP2 = ADC1BUF9;
     }
+
+    p1.y = translateToScreen(ADCValueP1);
+    p2.y = translateToScreen(ADCValueP2);
 }
+
+/**
+ * ISR general interrupt handler
+ */
+void core_interrupt_handler(void) {}
