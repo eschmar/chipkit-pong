@@ -90,8 +90,8 @@ void pause(int duration) {
 void tone(int note, int duration) {
 	int duration = duration * tempo;
 	int counter = 0;
-	int frequency = 625000 / note;
-	int freqVol =  frequency / 2;		// Modify volume?
+	int frequency = (int) 625000 / note;
+	int freqVol =  (int) frequency / 2;		// Modify volume?
 
 	enableTimer3PWM(frequency, 6, freqVol);
 	enableTimer1();
