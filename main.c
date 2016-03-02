@@ -81,9 +81,25 @@ int main(void) {
     // setup hardware
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
-    enable_interrupt();
     
-    for(;;) ;
+    // enable interrupts
+    enable_interrupt();
+
+
+    AD1PCFG = 0xFFE7;
+	AD1CON1 = 0x0000;
+	//AD1CHS = 0x04080000;
+
+	AD1CON1 = 0x04E4;
+	AD1CON2 = 0x0406;
+	AD1CON3 = 0x0F00;
+
+	ADICSSL = 0x0110;
+	
+	AD1CON1SET = 0x8000;
+
+
+	for(;;) ;
     return 0;
 }
 
@@ -103,6 +119,11 @@ void timer3_interrupt_handler(void) {
 
 int counter = GAME_SPEED;
 
+void delayCyc(int cyc) {
+	volatile int i;
+	for(i = cyc; i > 0; i--);
+}
+
 /**
  * ISR general interrupt handler
  */
@@ -113,6 +134,7 @@ void core_interrupt_handler(void) {
     counter--;
 
     if (counter != 0) { return; }
+    
     counter = GAME_SPEED;
 
     switch (gameState) {
@@ -142,14 +164,24 @@ void core_interrupt_handler(void) {
             break;
     }
 
-    // controllers    
-    if (btnVal == 2) {
-        // up
-        if (p1.y > 0) { p1.y -= 1; p2.y -= 1; } 
+    // controllers
+    if (counter == GAME_SPEED / 2) {
 
-    }else if (btnVal == 4) {
-        // down
-        if (p1.y < MAX_Y - PADDLE_HEIGHT - 1) { p1.y += 1; p2.y += 1; } 
-    } 
+    	IFSCLR(1) = 0x0002;
+    	AD1CON1SET = 0x0004;
+    	while (!IFS(1) & 0x0002);
+		AD1CON1CLR = 0x0004;
+		
+    	if (AD1CON2 & 0x0080) {
+			int ADCValueP1 = ADC1BUF0;
+			int ADCValueP2 = ADC1BUF1;
+			p1.y = ADCValueP1 / 42;
+			p2.y = ADCValueP2 / 42;
+		} else {
+			int ADCValueP1 = ADC1BUF8;
+			int ADCValueP2 = ADC1BUF9;
+			p1.y = ADCValueP1 / 42;
+			p2.y = ADCValueP2 / 42;
+		}
+	}
 }
-
