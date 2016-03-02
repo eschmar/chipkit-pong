@@ -152,11 +152,12 @@ void timer3_interrupt_handler(void) {
 
     int ADCValueP1, ADCValueP2;
 
-    // controllers
+    // start sampling and wait to complete
     IFSCLR(1) = 0x0002;
     AD1CON1SET = 0x0004;
     while (!IFS(1) & 0x0002);
     
+    // check which buffer to read from
     if (AD1CON2 & 0x0080) {
         ADCValueP1 = ADC1BUF0;
         ADCValueP2 = ADC1BUF1;
