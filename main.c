@@ -83,28 +83,10 @@ int main(void) {
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
     enableTimer3(31250, 0x1B, 0x111, 1);
-
-
-
-    // TODO: potentiometers
-    AD1PCFG = 0xFFE7;
-    AD1CON1 = 0x0000;
-    //AD1CHS = 0x04080000;
-
-    AD1CON1 = 0x04E4;
-    AD1CON2 = 0x0406;
-    AD1CON3 = 0x0F00;
-
-    AD1CSSL = 0x0110;
-    AD1CON1SET = 0x8000;
-
-
-
+    setupPotentiometers();
 
     enableMultiVectorMode();
     enable_interrupt();
-
-    
 
 	for(;;) ;
     return 0;
@@ -161,23 +143,23 @@ void timer3_interrupt_handler(void) {
     if (counterController != 0) { return; }
     counterController = CONTROLLER_SPEED;
 
+    int ADCValueP1, ADCValueP2;
+
     // controllers
     IFSCLR(1) = 0x0002;
     AD1CON1SET = 0x0004;
     while (!IFS(1) & 0x0002);
-    AD1CON1CLR = 0x0004;
     
     if (AD1CON2 & 0x0080) {
-        int ADCValueP1 = ADC1BUF0;
-        int ADCValueP2 = ADC1BUF1;
-        p1.y = ADCValueP1 / 42;
-        p2.y = ADCValueP2 / 42;
+        ADCValueP1 = ADC1BUF0;
+        ADCValueP2 = ADC1BUF1;
     } else {
-        int ADCValueP1 = ADC1BUF8;
-        int ADCValueP2 = ADC1BUF9;
-        p1.y = ADCValueP1 / 42;
-        p2.y = ADCValueP2 / 42;
+        ADCValueP1 = ADC1BUF8;
+        ADCValueP2 = ADC1BUF9;
     }
+
+    p1.y = ADCValueP1 / 42;
+    p2.y = ADCValueP2 / 42;
 }
 
 /**

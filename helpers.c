@@ -94,3 +94,18 @@ void enableTimer3(int period, int priority, int prescaling, int interrupts) {
     // enable
     T3CONSET = 0x8000;
 }
+
+/**
+ *  Set up ADC on pins A1 and A2
+ */
+void setupPotentiometers() {
+    AD1PCFG = 0xFFE7;
+    AD1CON1 = 0x0000;
+
+    AD1CON1 = 0x04E4;
+    AD1CON2 = 0x0406;
+    AD1CON3 = 0x0F00;
+
+    AD1CSSL = 0x0110;
+    AD1CON1SET = 0x8000;
+}

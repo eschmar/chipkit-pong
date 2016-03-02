@@ -7,5 +7,6 @@ void enableTimer2(int period, int priority, int prescaling, int interrupts);
 void enableTimer3(int period, int priority, int prescaling, int interrupts);
 void enableButtons();
 int isButtonPressed(int i);
+void setupPotentiometers();
 
 #endif // HELPERS_H_
