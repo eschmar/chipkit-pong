@@ -157,9 +157,9 @@ void clearGame() {
  */
 void drawScore(Paddle p1, Paddle p2) {
     int i, x = 52;
-    char c = p1.score + '0';
     p1.score = p1.score % 128;
     p2.score = p2.score % 128;
+    char c = p1.score + '0';
 
     for (i = 0; i < 8; i++) {
         game[x + i] = font[c * 8 + i];
@@ -175,6 +175,38 @@ void drawScore(Paddle p1, Paddle p2) {
     c = p2.score + '0';
     for (i = 0; i < 8; i++) {
         game[x + i] = font[c * 8 + i];
+    }
+}
+
+/*
+ *  Print who won
+ */
+void drawWinner(Paddle p1, Paddle p2) {
+    int winner = p1.score > p2.score ? 1 : 2;
+    int i, c, x = 64;
+    char sequence[] = {'P', 'l', 'a', 'y', 'e', 'r', ' ', winner + '0', '!'};
+    int offset = 3 * 128;
+
+    for (c = 0; c < sizeof(sequence); c++) {
+        for (i = 0; i < 8; i++) {
+            game[offset + x + c * 8 + i] = font[sequence[c] * 8 + i];
+        }
+    }
+}
+
+/*
+ *  Print who won inverted
+ */
+void drawWinnerInverted(Paddle p1, Paddle p2) {
+    int winner = p1.score > p2.score ? 1 : 2;
+    int i, c, x = 64;
+    char sequence[] = {'P', 'l', 'a', 'y', 'e', 'r', ' ', winner + '0', '!'};
+    int offset = 3 * 128;
+
+    for (c = 0; c < sizeof(sequence); c++) {
+        for (i = 0; i < 8; i++) {
+            game[offset + x + c * 8 + i] = ~font[sequence[c] * 8 + i];
+        }
     }
 }
 
@@ -220,3 +252,19 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
 void drawLogo() {
     renderScreen(logo);
 }
+
+/*
+ *  Ending Screen
+ */
+void drawEnding(Paddle p1, Paddle p2) {
+    clearGame();
+    int i;
+    for (i = 0; i < sizeof(game); i++) {
+        game[i] = minion[i];
+    }
+    
+    drawWinnerInverted(p1, p2);
+    renderScreen(game);
+}
+
+

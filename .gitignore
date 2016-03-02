@@ -9,3 +9,5 @@
 
 pic32mx.h
 *.psd
+
+*.DS_Store

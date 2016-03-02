@@ -53,3 +53,7 @@ void enableTimer3(int period, int priority, int prescaling, int interrupts) {
     // enable
     T3CONSET = 0x8000;
 }
+
+void enableButtons() {
+    TRISD |= (0x3f << 5);
+}
