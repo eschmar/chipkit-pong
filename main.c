@@ -134,6 +134,13 @@ void timer2_interrupt_handler(void) {
 int counterController = CONTROLLER_SPEED;
 
 /**
+ *  Linear mapping from [0,1023] to valid paddle position
+ */
+int translateToScreen(int val) {
+    return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
+}
+
+/**
  * ISR Interrupt handler for timer 3
  */
 void timer3_interrupt_handler(void) {
@@ -158,8 +165,8 @@ void timer3_interrupt_handler(void) {
         ADCValueP2 = ADC1BUF9;
     }
 
-    p1.y = ADCValueP1 / 42;
-    p2.y = ADCValueP2 / 42;
+    p1.y = translateToScreen(ADCValueP1);
+    p2.y = translateToScreen(ADCValueP2);
 }
 
 /**
