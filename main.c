@@ -5,7 +5,7 @@
 #include "types.h"
 
 #define GAME_SPEED          100
-#define GAME_WIN_SCORE    3
+#define GAME_WIN_SCORE      3
 #define MAX_X               128
 #define MAX_Y               32
 #define PADDLE_HEIGHT       8
@@ -81,11 +81,9 @@ int main(void) {
     // setup hardware
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
-    
-    // enable interrupts
     enable_interrupt();
 
-
+    // TODO: potentiometers
     AD1PCFG = 0xFFE7;
 	AD1CON1 = 0x0000;
 	//AD1CHS = 0x04080000;
@@ -94,10 +92,8 @@ int main(void) {
 	AD1CON2 = 0x0406;
 	AD1CON3 = 0x0F00;
 
-	ADICSSL = 0x0110;
-	
+	AD1CSSL = 0x0110;
 	AD1CON1SET = 0x8000;
-
 
 	for(;;) ;
     return 0;
@@ -119,11 +115,6 @@ void timer3_interrupt_handler(void) {
 
 int counter = GAME_SPEED;
 
-void delayCyc(int cyc) {
-	volatile int i;
-	for(i = cyc; i > 0; i--);
-}
-
 /**
  * ISR general interrupt handler
  */
@@ -134,7 +125,6 @@ void core_interrupt_handler(void) {
     counter--;
 
     if (counter != 0) { return; }
-    
     counter = GAME_SPEED;
 
     switch (gameState) {
@@ -165,8 +155,7 @@ void core_interrupt_handler(void) {
     }
 
     // controllers
-    if (counter == GAME_SPEED / 2) {
-
+    //if (counter == GAME_SPEED / 2) {
     	IFSCLR(1) = 0x0002;
     	AD1CON1SET = 0x0004;
     	while (!IFS(1) & 0x0002);
@@ -183,5 +172,5 @@ void core_interrupt_handler(void) {
 			p1.y = ADCValueP1 / 42;
 			p2.y = ADCValueP2 / 42;
 		}
-	}
+	//}
 }
