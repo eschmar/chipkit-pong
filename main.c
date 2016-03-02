@@ -9,6 +9,7 @@
 #define MAX_X               128
 #define MAX_Y               32
 #define PADDLE_HEIGHT       8
+#define CONTROLLER_SPEED    40
 
 #define STATE_START     0
 #define STATE_PONG      1
@@ -81,45 +82,40 @@ int main(void) {
     // setup hardware
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
-    enable_interrupt();
+    enableTimer3(31250, 0x1B, 0x111, 1);
+
+
 
     // TODO: potentiometers
     AD1PCFG = 0xFFE7;
-	AD1CON1 = 0x0000;
-	//AD1CHS = 0x04080000;
+    AD1CON1 = 0x0000;
+    //AD1CHS = 0x04080000;
 
-	AD1CON1 = 0x04E4;
-	AD1CON2 = 0x0406;
-	AD1CON3 = 0x0F00;
+    AD1CON1 = 0x04E4;
+    AD1CON2 = 0x0406;
+    AD1CON3 = 0x0F00;
 
-	AD1CSSL = 0x0110;
-	AD1CON1SET = 0x8000;
+    AD1CSSL = 0x0110;
+    AD1CON1SET = 0x8000;
+
+
+
+
+    enableMultiVectorMode();
+    enable_interrupt();
+
+    
 
 	for(;;) ;
     return 0;
 }
 
+int counter = GAME_SPEED;
+
 /**
  * ISR Interrupt handler for timer 2
  */
 void timer2_interrupt_handler(void) {
-   
-}
-
-/**
- * ISR Interrupt handler for timer 3
- */
-void timer3_interrupt_handler(void) {
-   
-}
-
-int counter = GAME_SPEED;
-
-/**
- * ISR general interrupt handler
- */
-void core_interrupt_handler(void) {
-    // clear t2 interrupt flag
     IFSCLR(0) = 0x100;
     counter--;
 
@@ -151,6 +147,19 @@ void core_interrupt_handler(void) {
             }
             break;
     }
+}
+
+int counterController = CONTROLLER_SPEED;
+
+/**
+ * ISR Interrupt handler for timer 3
+ */
+void timer3_interrupt_handler(void) {
+    IFSCLR(0) = 0x1000;
+    counterController--;
+
+    if (counterController != 0) { return; }
+    counterController = CONTROLLER_SPEED;
 
     // controllers
     IFSCLR(1) = 0x0002;
@@ -170,3 +179,8 @@ void core_interrupt_handler(void) {
         p2.y = ADCValueP2 / 42;
     }
 }
+
+/**
+ * ISR general interrupt handler
+ */
+void core_interrupt_handler(void) {}
