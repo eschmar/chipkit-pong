@@ -155,22 +155,20 @@ void core_interrupt_handler(void) {
     }
 
     // controllers
-    //if (counter == GAME_SPEED / 2) {
-    	IFSCLR(1) = 0x0002;
-    	AD1CON1SET = 0x0004;
-    	while (!IFS(1) & 0x0002);
-		AD1CON1CLR = 0x0004;
-		
-    	if (AD1CON2 & 0x0080) {
-			int ADCValueP1 = ADC1BUF0;
-			int ADCValueP2 = ADC1BUF1;
-			p1.y = ADCValueP1 / 42;
-			p2.y = ADCValueP2 / 42;
-		} else {
-			int ADCValueP1 = ADC1BUF8;
-			int ADCValueP2 = ADC1BUF9;
-			p1.y = ADCValueP1 / 42;
-			p2.y = ADCValueP2 / 42;
-		}
-	//}
+    IFSCLR(1) = 0x0002;
+    AD1CON1SET = 0x0004;
+    while (!IFS(1) & 0x0002);
+    AD1CON1CLR = 0x0004;
+    
+    if (AD1CON2 & 0x0080) {
+        int ADCValueP1 = ADC1BUF0;
+        int ADCValueP2 = ADC1BUF1;
+        p1.y = ADCValueP1 / 42;
+        p2.y = ADCValueP2 / 42;
+    } else {
+        int ADCValueP1 = ADC1BUF8;
+        int ADCValueP2 = ADC1BUF9;
+        p1.y = ADCValueP1 / 42;
+        p2.y = ADCValueP2 / 42;
+    }
 }
