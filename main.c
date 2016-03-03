@@ -1,8 +1,9 @@
 #include <pic32mx.h>
+#include "types.h"
 #include "helpers.h"
 #include "assets.h"
 #include "display.h"
-#include "types.h"
+
 
 #define GAME_SPEED          100
 #define GAME_WIN_SCORE      3
@@ -95,11 +96,43 @@ int main(void) {
 int counter = GAME_SPEED;
 
 /**
+ *  Linear mapping from [0,1023] to valid paddle position
+ */
+int translateToScreen(int val) {
+    return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
+}
+
+void updatePaddles(Paddle p1, Paddle p2) {
+    int ADCValueP1, ADCValueP2;
+
+    // start sampling and wait to complete
+    IFSCLR(1) = 0x0002;
+    AD1CON1SET = 0x0004;
+    while (!IFS(1) & 0x0002);
+    
+    // check which buffer to read from
+    if (AD1CON2 & 0x0080) {
+        ADCValueP1 = ADC1BUF0;
+        ADCValueP2 = ADC1BUF1;
+    } else {
+        ADCValueP1 = ADC1BUF8;
+        ADCValueP2 = ADC1BUF9;
+    }
+
+    p1.y = translateToScreen(ADCValueP1);
+    p2.y = translateToScreen(ADCValueP2);
+}
+
+/**
  * ISR Interrupt handler for timer 2
  */
 void timer2_interrupt_handler(void) {
     IFSCLR(0) = 0x100;
     counter--;
+
+    if (counter % 40 == 0) {
+        updatePaddles(p1, p2);
+    }
 
     if (counter != 0) { return; }
     counter = GAME_SPEED;
@@ -131,43 +164,14 @@ void timer2_interrupt_handler(void) {
     }
 }
 
-int counterController = CONTROLLER_SPEED;
 
-/**
- *  Linear mapping from [0,1023] to valid paddle position
- */
-int translateToScreen(int val) {
-    return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
-}
 
 /**
  * ISR Interrupt handler for timer 3
  */
 void timer3_interrupt_handler(void) {
     IFSCLR(0) = 0x1000;
-    counterController--;
-
-    if (counterController != 0) { return; }
-    counterController = CONTROLLER_SPEED;
-
-    int ADCValueP1, ADCValueP2;
-
-    // start sampling and wait to complete
-    IFSCLR(1) = 0x0002;
-    AD1CON1SET = 0x0004;
-    while (!IFS(1) & 0x0002);
     
-    // check which buffer to read from
-    if (AD1CON2 & 0x0080) {
-        ADCValueP1 = ADC1BUF0;
-        ADCValueP2 = ADC1BUF1;
-    } else {
-        ADCValueP1 = ADC1BUF8;
-        ADCValueP2 = ADC1BUF9;
-    }
-
-    p1.y = translateToScreen(ADCValueP1);
-    p2.y = translateToScreen(ADCValueP2);
 }
 
 /**

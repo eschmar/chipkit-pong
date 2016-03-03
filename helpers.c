@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "types.h"
 
 /*
  * Timer3 registers

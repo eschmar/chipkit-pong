@@ -8,5 +8,7 @@ void enableTimer3(int period, int priority, int prescaling, int interrupts);
 void enableButtons();
 int isButtonPressed(int i);
 void setupPotentiometers();
+// int translateToScreen(int val);
+// void updatePaddles(Paddle p1, Paddle p2);
 
 #endif // HELPERS_H_
