@@ -102,7 +102,7 @@ int translateToScreen(int val) {
     return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
 }
 
-void updatePaddles(Paddle p1, Paddle p2) {
+void updatePaddles() {
     int ADCValueP1, ADCValueP2;
 
     // start sampling and wait to complete
@@ -130,12 +130,9 @@ void timer2_interrupt_handler(void) {
     IFSCLR(0) = 0x100;
     counter--;
 
-    if (counter % 40 == 0) {
-        updatePaddles(p1, p2);
-    }
-
     if (counter != 0) { return; }
     counter = GAME_SPEED;
+    updatePaddles();
 
     switch (gameState) {
         case STATE_PONG:
@@ -164,14 +161,11 @@ void timer2_interrupt_handler(void) {
     }
 }
 
-
-
 /**
  * ISR Interrupt handler for timer 3
  */
 void timer3_interrupt_handler(void) {
-    IFSCLR(0) = 0x1000;
-    
+    // IFSCLR(0) = 0x1000;
 }
 
 /**
