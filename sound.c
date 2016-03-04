@@ -19,7 +19,7 @@
 
 #include <pic32mx.h>
 
-int volumeSet = 200;   // MAX 2 - MIN 800
+int volumeSet = 500;   // MAX 2 - MIN 800
 
 /*
  * Enable Timer3 in PWM mode
@@ -43,9 +43,7 @@ void enableTimer3PWM(void) {
  * Stop Timer3 PWM
  */
 void mute(void) {
-    T3CON = 0x0;
     PR3 = 0;
-    OC1CON = 0x0;
     OC1R = 0;
     OC1RS = 0;
 }
@@ -64,7 +62,7 @@ void tone(int note) {
         int volume =  (int) frequency / volumeSet;
 
         PR3 = frequency;
-        OC1R = freqVol;
-        OC1RS = freqVol;
+        OC1R = volume;
+        OC1RS = volume;
     }
 }

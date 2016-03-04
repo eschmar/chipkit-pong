@@ -71,6 +71,30 @@ void init_game() {
     ball.speedY = 1;    
 }
 
+int tuneCount = 1;
+int tuneScale = 3;
+/*
+ *      Plays a sequence of notes
+ */
+void playTune(int tune[], int tempo) {
+    int length = tune[0];
+    
+    tone(tune[tuneCount]);
+    
+    if (tune[tuneCount] == 0) {
+        tuneScale = 1;
+    }
+    
+    tuneScale--;
+    if (tuneScale == 0) {
+    tuneScale = tempo;
+        tuneCount++;
+        if (tuneCount == length) {
+            tuneCount = 1;
+        }
+    }
+}
+
 /*
  *    Initialise
  */
@@ -154,33 +178,31 @@ void timer2_interrupt_handler(void) {
             advance();
             draw(p1, p2, ball);
 
-            // Play Tetris tune
-            tone(tetris[tetrisCount], 20);
-            tetrisScale++;
-            if (tetrisScale == 2) {
-            tetrisScale = 0;
-                tetrisCount++;
-                if (tetrisCount == 66) {
-                    tetrisCount = 0;
-                }
-            }
+            playTune(tetris, 3);
 
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
+                tuneCount = 0;
+                mute();
                 drawEnding(p1, p2);
             }
             break;
         case STATE_START:
+            playTune(starWars, 3);
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
+                tuneCount = 0;
+                mute();
                 draw(p1, p2, ball);
             }
             break;
         case STATE_END:
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
+                tuneCount = 0;
+                mute();
                 drawLogo();
             }
             break;
