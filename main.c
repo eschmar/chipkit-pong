@@ -104,12 +104,11 @@ int main(void) {
 
     drawLogo();
     init_game();
-    enableTimer3PWM();
 
     // setup hardware
     enableButtons();
     enableTimer2(31250, 0x1B, 0x111, 1);
-    enableTimer3(31250, 0x1B, 0x111, 1);
+    enableTimer3PWM();
     setupPotentiometers();
 
     enableMultiVectorMode();
@@ -148,9 +147,6 @@ void updatePaddles() {
     p1.y = translateToScreen(ADCValueP1);
     p2.y = translateToScreen(ADCValueP2);
 }
-
-int tetrisCount = 0;
-int tetrisScale = 0;
 
 /**
  * ISR Interrupt handler for timer 2
