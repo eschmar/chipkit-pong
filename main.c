@@ -72,7 +72,7 @@ void init_game() {
 }
 
 int tuneCount = 1;
-int tuneScale = 3;
+int tuneScale = 0;
 /*
  *      Plays a sequence of notes
  */
@@ -82,12 +82,12 @@ void playTune(int tune[], int tempo) {
     tone(tune[tuneCount]);
     
     if (tune[tuneCount] == 0) {
-        tuneScale = 1;
+        tuneScale = tempo - 1;
     }
     
-    tuneScale--;
-    if (tuneScale == 0) {
-    tuneScale = tempo;
+    tuneScale++;
+    if (tuneScale == tempo) {
+    tuneScale = 0;
         tuneCount++;
         if (tuneCount == length) {
             tuneCount = 1;
