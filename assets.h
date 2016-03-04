@@ -6,6 +6,7 @@
 extern const uint8_t const font[];
 extern const uint8_t const logo[];
 extern const uint8_t const minion[];
+extern const uint8_t const items[3][13];
 
 extern int tetris[];
 extern int starWars[];

@@ -16,8 +16,15 @@
 #define STATE_START     0
 #define STATE_PONG      1
 #define STATE_END       2
+#define STATE_MENU      3
+
+#define MENU_MULTI      0
+#define MENU_CPUBAS     1
+#define MENU_CPUADV     2
 
 int gameState = STATE_START;
+int menuState = 0;
+int numPlayer = 0;
 Paddle p1, p2;
 Ball ball;
 
@@ -58,11 +65,11 @@ void advance() {
  */
 void init_game() {
     p1.x = 0;
-    p1.y = 5;
+    p1.y = 12;
     p1.score = 0;
 
     p2.x = 127;
-    p2.y = 5;
+    p2.y = 12;
     p2.score = 0;
 
     ball.x = 60;
@@ -127,7 +134,7 @@ int translateToScreen(int val) {
     return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
 }
 
-void updatePaddles() {
+void updatePaddles(int numPlayer) {
     int ADCValueP1, ADCValueP2;
 
     // start sampling and wait to complete
@@ -145,7 +152,63 @@ void updatePaddles() {
     }
 
     p1.y = translateToScreen(ADCValueP1);
-    p2.y = translateToScreen(ADCValueP2);
+    if (numPlayer == 2) {
+        p2.y = translateToScreen(ADCValueP2);
+    }
+}
+
+/**
+ *  Maps the master potentiometer position to
+ *  to one of the three menu items
+ */
+void updateMenu() {
+    int ADCValueP1;
+
+    // start sampling and wait to complete
+    IFSCLR(1) = 0x0002;
+    AD1CON1SET = 0x0004;
+    while (!IFS(1) & 0x0002);
+    
+    // check which buffer to read from
+    if (AD1CON2 & 0x0080) {
+        ADCValueP1 = ADC1BUF0;
+    } else {
+        ADCValueP1 = ADC1BUF8;
+    }
+    menuState = ((3 * ADCValueP1) / 1024);
+}
+
+int direction = 0;
+int targetCoord = 0;
+/**
+ *  Generate a CPU player at two levels: basic and advanced (always correct)
+ */
+void CPUplayer(int level) {
+    if (ball.y == 0 && ball.x > 63) {
+        direction = 1;
+        targetCoord = ((MAX_X - ball.x - 1) / 2) - 1;
+    } else if (ball.y == MAX_Y - 1 && ball.x > 63) {
+        direction = -1;
+        targetCoord = 31 - (((MAX_X - ball.x - 1) / 2) - 1);
+    }
+
+
+    if (level == 1) {
+        if (direction == 1 && p2.y < 23 && ball.x > 100) {
+            p2.y++;
+        } else if (direction == -1 && p2.y > 0 && ball.x > 100) {
+            p2.y--;
+        }
+    } else if (level == 0) {
+        // TODO: Fix advanced player, now it doesn't work
+        if (p2.y >= 0 && p2.y <= 23) {
+            if (p2.y - 4 < targetCoord) {
+                p2.y++;
+            } else if (p2.y - 4 > targetCoord) {
+                p2.y--;
+            }
+        }
+    }
 }
 
 /**
@@ -157,11 +220,34 @@ void timer2_interrupt_handler(void) {
 
     if (counter != 0) { return; }
     counter = GAME_SPEED;
-    updatePaddles();
+    updatePaddles(numPlayer);
 
     switch (gameState) {
+        case STATE_MENU:
+            updateMenu();
+            drawMenu(menuState);
+            playTune(starWars, 3);
+            if (isButtonPressed(4)) {
+                init_game();
+                gameState = STATE_PONG;
+                tuneCount = 0;
+                mute();
+                draw(p1, p2, ball);
+            }
+            break;
         case STATE_PONG:
             advance();
+            
+            if (menuState == MENU_MULTI) {
+                numPlayer = 2;
+            } else if (menuState == MENU_CPUBAS) {
+                numPlayer = 1;
+                CPUplayer(1); // basic CPU player
+            } else if (menuState == MENU_CPUADV) {
+                numPlayer = 1;
+                CPUplayer(0); // advanced CPU player
+            }
+
             draw(p1, p2, ball);
 
             playTune(tetris, 3);
@@ -177,11 +263,8 @@ void timer2_interrupt_handler(void) {
         case STATE_START:
             playTune(starWars, 3);
             if (isButtonPressed(4)) {
-                init_game();
-                gameState = STATE_PONG;
-                tuneCount = 0;
-                mute();
-                draw(p1, p2, ball);
+                gameState = STATE_MENU;
+                drawMenu(menuState);
             }
             break;
         case STATE_END:

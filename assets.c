@@ -244,6 +244,12 @@ const uint8_t const minion[] = {
     0xFF, 0xFF
 };
 
+const uint8_t const items[3][13] = {
+    {'M', 'u', 'l', 't', 'i', 'p', 'l', 'a', 'y', 'e', 'r', ' ', ' '},
+    {'S', 'i', 'n', 'g', 'l', 'e', ' ', 'p', 'l', 'a', 'y', 'e', 'r'},
+    {'T', 'r', 'a', 'i', 'n', 'i', 'n', 'g', ' ', ' ', ' ', ' ', ' '}
+};
+
 int tetris[] = {72,
     E5, E5, B4, C5, D5, D5, C5, B4, 
     A4, A4, A4, C5, E5, E5, D5, C5, 
