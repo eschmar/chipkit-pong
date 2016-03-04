@@ -3,7 +3,8 @@
 #include "helpers.h"
 #include "assets.h"
 #include "display.h"
-
+#include "sound.h"
+#include "freqmap.h"
 
 #define GAME_SPEED          100
 #define GAME_WIN_SCORE      3
@@ -70,6 +71,30 @@ void init_game() {
     ball.speedY = 1;    
 }
 
+int tuneCount = 1;
+int tuneScale = 0;
+/*
+ *      Plays a sequence of notes
+ */
+void playTune(int tune[], int tempo) {
+    int length = tune[0];
+    
+    tone(tune[tuneCount]);
+    
+    if (tune[tuneCount] == 0) {
+        tuneScale = tempo - 1;
+    }
+    
+    tuneScale++;
+    if (tuneScale == tempo) {
+    tuneScale = 0;
+        tuneCount++;
+        if (tuneCount == length) {
+            tuneCount = 1;
+        }
+    }
+}
+
 /*
  *    Initialise
  */
@@ -79,6 +104,7 @@ int main(void) {
 
     drawLogo();
     init_game();
+    enableTimer3PWM();
 
     // setup hardware
     enableButtons();
@@ -89,7 +115,7 @@ int main(void) {
     enableMultiVectorMode();
     enable_interrupt();
 
-	for(;;) ;
+    for(;;) ;
     return 0;
 }
 
@@ -123,6 +149,19 @@ void updatePaddles() {
     p2.y = translateToScreen(ADCValueP2);
 }
 
+// TODO: Tetris tune assets to move
+int tetris[] = {E5, E5, B4, C5, D5, D5, C5, B4, 
+                A4, A4, PP, A4, C5, E5, E5, D5, C5, 
+                B4, B4, B4, C5, D5, D5, E5, E5,
+                C5, C5, A4, A4, PP, A4, B4, C5,
+                D5, D5, D5, F5, A5, A5, G5, F5,
+                E5, E5, E5, C5, E5, E5, D5, C5,
+                B4, B4, PP, B4, C5, D5, D5, E5, E5,
+                C5, C5, A4, A4, PP, A4, A4, PP, PP, PP};
+int tetrisCount = 0;
+int tetrisScale = 0;
+
+int counter = GAME_SPEED;
 /**
  * ISR Interrupt handler for timer 2
  */
@@ -139,22 +178,31 @@ void timer2_interrupt_handler(void) {
             advance();
             draw(p1, p2, ball);
 
+            playTune(tetris, 3);
+
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
+                tuneCount = 0;
+                mute();
                 drawEnding(p1, p2);
             }
             break;
         case STATE_START:
+            playTune(starWars, 3);
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
+                tuneCount = 0;
+                mute();
                 draw(p1, p2, ball);
             }
             break;
         case STATE_END:
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
+                tuneCount = 0;
+                mute();
                 drawLogo();
             }
             break;

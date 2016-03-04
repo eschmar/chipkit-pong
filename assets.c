@@ -1,5 +1,6 @@
 #include "assets.h"
 #include <stdint.h>
+#include "freqmap.h"
 
 const uint8_t const font[] = {
     0, 0, 0, 0, 0, 0, 0, 0,
@@ -241,4 +242,32 @@ const uint8_t const minion[] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
     0xFF, 0xFF
+};
+
+int tetris[] = {72,
+    E5, E5, B4, C5, D5, D5, C5, B4, 
+    A4, A4, A4, C5, E5, E5, D5, C5, 
+    B4, B4, B4, C5, D5, D5, E5, E5,
+    C5, C5, A4, A4, PP, A4, B4, C5,
+    D5, D5, D5, F5, A5, A5, G5, F5,
+    E5, E5, E5, C5, E5, E5, D5, C5,
+    B4, B4, B4, C5, D5, D5, E5, E5,
+    C5, C5, A4, A4, A4, A4, PP, PP,
+    PP, PP, PP, PP, PP, PP, PP, PP
+};
+
+int starWars[] = {112,
+    PP, PP, PP, G3, PP, G3, PP, G3, 
+    C4, C4, C4, C4, G4, G4, G4, G4,
+    F4, E4, D4, C5, C5, C5, C5, C5, G4, G4,
+    F4, E4, D4, C5, C5, C5, C5, C5, G4, G4,
+    F4, E4, F4, D4, D4, D4, PP, PP,
+    PP, PP, PP, PP, PP, PP, PP, PP,
+    PP, PP, PP, G3, PP, G3, PP, G3, 
+    C4, C4, C4, C4, G4, G4, G4, G4,
+    F4, E4, D4, C5, C5, C5, C5, C5, G4, G4,
+    F4, E4, D4, C5, C5, C5, C5, C5, G4, G4,
+    F4, E4, F4, D4, D4, D4, PP, PP,
+    PP, PP, PP, PP, PP, PP, PP, PP,
+    PP, PP, PP, PP, PP, PP, PP, PP
 };
