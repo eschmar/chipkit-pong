@@ -19,7 +19,7 @@
 
 #include <pic32mx.h>
 
-int volumeSet = 500;   // MAX 2 - MIN 800
+int volumeSet = 2;   // MAX 2 - MIN 800
 
 /*
  * Enable Timer3 in PWM mode

@@ -258,6 +258,7 @@ void timer2_interrupt_handler(void) {
 
             draw(p1, p2, ball);
 
+            //playTune(FF7battle, 1);
             playTune(tetris, 3);
 
             // game end?
@@ -276,6 +277,7 @@ void timer2_interrupt_handler(void) {
             }
             break;
         case STATE_END:
+            playTune(FF7fanfare, 2);
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
                 tuneCount = 0;
