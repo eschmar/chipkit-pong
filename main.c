@@ -226,11 +226,11 @@ void timer2_interrupt_handler(void) {
         case STATE_MENU:
             updateMenu();
             drawMenu(menuState);
-            playTune(starWars, 3);
+            playTune(FF7prelude, 2);
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 draw(p1, p2, ball);
             }
@@ -255,13 +255,13 @@ void timer2_interrupt_handler(void) {
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 drawEnding(p1, p2);
             }
             break;
         case STATE_START:
-            playTune(starWars, 3);
+            playTune(FF7prelude, 2);
             if (isButtonPressed(4)) {
                 gameState = STATE_MENU;
                 drawMenu(menuState);
@@ -270,7 +270,7 @@ void timer2_interrupt_handler(void) {
         case STATE_END:
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 drawLogo();
             }

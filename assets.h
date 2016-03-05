@@ -10,5 +10,6 @@ extern const uint8_t const items[3][13];
 
 extern int tetris[];
 extern int starWars[];
+extern int FF7prelude[];
 
 #endif // FONT_H_
