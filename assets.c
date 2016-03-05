@@ -250,6 +250,19 @@ const uint8_t const items[3][13] = {
     {'T', 'r', 'a', 'i', 'n', 'i', 'n', 'g', ' ', ' ', ' ', ' ', ' '}
 };
 
+int FF7prelude[] = {160,
+    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
+    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
+    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
+    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
+    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
+    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
+    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
+    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
+    A1, C2, F2, G2, A2, C3, F3, G3, A3, C4, F4, G4, A4, C5, F5, G5,
+    A5, G5, F5, C5, A4, G4, F4, C4, A3, G3, F3, C3, A2, G2, F2, C2,
+};
+
 int tetris[] = {72,
     E5, E5, B4, C5, D5, D5, C5, B4, 
     A4, A4, A4, C5, E5, E5, D5, C5, 
@@ -276,17 +289,4 @@ int starWars[] = {112,
     F4, E4, F4, D4, D4, D4, PP, PP,
     PP, PP, PP, PP, PP, PP, PP, PP,
     PP, PP, PP, PP, PP, PP, PP, PP
-};
-
-int FF7prelude[] = {160,
-    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
-    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
-    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
-    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
-    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
-    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
-    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
-    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
-    A1, C2, F2, G2, A2, C3, F3, G3, A3, C4, F4, G4, A4, C5, F5, G5,
-    A5, G5, F5, C5, A4, G4, F4, C4, A3, G3, F3, C3, A2, G2, F2, C2,
 };

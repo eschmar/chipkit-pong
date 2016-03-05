@@ -23,7 +23,7 @@
 #define MENU_CPUADV     2
 
 int gameState = STATE_START;
-int menuState = 0;
+int menuState = MENU_MULTI;
 int numPlayer = 0;
 Paddle p1, p2;
 Ball ball;
@@ -69,22 +69,22 @@ void init_game() {
     p1.score = 0;
 
     p2.x = 127;
-    p2.y = 12;
+    p2.y = 23;
     p2.score = 0;
 
-    ball.x = 60;
+    ball.x = 61;
     ball.y = 15;
     ball.speedX = 2;
     ball.speedY = 1;    
 }
 
-int tuneCount = 1;
+int tuneCount = 0;
 int tuneScale = 0;
 /*
  *      Plays a sequence of notes
  */
 void playTune(int tune[], int tempo) {
-    int length = tune[0];
+    int tuneLength = tune[0];
     
     tone(tune[tuneCount]);
     
@@ -96,8 +96,8 @@ void playTune(int tune[], int tempo) {
     if (tuneScale == tempo) {
     tuneScale = 0;
         tuneCount++;
-        if (tuneCount == length) {
-            tuneCount = 1;
+        if (tuneCount == tuneLength) {
+            tuneCount = 0;
         }
     }
 }
@@ -184,29 +184,29 @@ int targetCoord = 0;
  *  Generate a CPU player at two levels: basic and advanced (always correct)
  */
 void CPUplayer(int level) {
-    if (ball.y == 0 && ball.x > 63) {
-        direction = 1;
-        targetCoord = ((MAX_X - ball.x - 1) / 2) - 1;
-    } else if (ball.y == MAX_Y - 1 && ball.x > 63) {
-        direction = -1;
-        targetCoord = 31 - (((MAX_X - ball.x - 1) / 2) - 1);
-    }
-
-
     if (level == 1) {
+        if (ball.y == 0) {
+            direction = 1;
+        } else if (ball.y == MAX_Y - 1) {
+            direction = -1;
+        }
+
         if (direction == 1 && p2.y < 23 && ball.x > 100) {
             p2.y++;
         } else if (direction == -1 && p2.y > 0 && ball.x > 100) {
             p2.y--;
         }
     } else if (level == 0) {
-        // TODO: Fix advanced player, now it doesn't work
-        if (p2.y >= 0 && p2.y <= 23) {
-            if (p2.y - 4 < targetCoord) {
-                p2.y++;
-            } else if (p2.y - 4 > targetCoord) {
-                p2.y--;
-            }
+        if (ball.x == 63 && ball.speedX > 0) {
+            targetCoord = MAX_Y - 1 - ball.y;
+        } else if (ball.x == 64 && ball.speedX > 0) {
+            targetCoord = MAX_Y - 1 - (ball.y - (direction));
+        }
+        
+        if (p2.y < 23 && p2.y + 4 < targetCoord) {
+            p2.y++;
+        } else if (p2.y > 0 && p2.y + 4 > targetCoord) {
+            p2.y--;
         }
     }
 }
@@ -230,7 +230,7 @@ void timer2_interrupt_handler(void) {
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
-                tuneCount = 1;
+                tuneCount = 0;
                 mute();
                 draw(p1, p2, ball);
             }
@@ -246,6 +246,14 @@ void timer2_interrupt_handler(void) {
             } else if (menuState == MENU_CPUADV) {
                 numPlayer = 1;
                 CPUplayer(0); // advanced CPU player
+
+                // Exit to menu if button 4 is pressed
+                if (isButtonPressed(4)) {
+                    gameState = STATE_MENU;
+                    tuneCount = 0;
+                    mute();
+                    drawMenu(menuState);
+                }
             }
 
             draw(p1, p2, ball);
@@ -255,7 +263,7 @@ void timer2_interrupt_handler(void) {
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = 1;
+                tuneCount = 0;
                 mute();
                 drawEnding(p1, p2);
             }
@@ -270,7 +278,7 @@ void timer2_interrupt_handler(void) {
         case STATE_END:
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
-                tuneCount = 1;
+                tuneCount = 0;
                 mute();
                 drawLogo();
             }
