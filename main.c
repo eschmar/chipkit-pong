@@ -25,6 +25,7 @@
 int gameState = STATE_START;
 int menuState = MENU_MULTI;
 int numPlayer = 0;
+int volume = 2;
 Paddle p1, p2;
 Ball ball;
 
@@ -78,15 +79,15 @@ void init_game() {
     ball.speedY = 1;    
 }
 
-int tuneCount = 0;
+int tuneCount = 1;
 int tuneScale = 0;
 /*
  *      Plays a sequence of notes
  */
-void playTune(int tune[], int tempo) {
+void playTune(int tune[], int tempo, int toneVolume) {
     int tuneLength = tune[0];
     
-    tone(tune[tuneCount]);
+    tone(tune[tuneCount], toneVolume);
     
     if (tune[tuneCount] == 0) {
         tuneScale = tempo - 1;
@@ -97,7 +98,7 @@ void playTune(int tune[], int tempo) {
     tuneScale = 0;
         tuneCount++;
         if (tuneCount == tuneLength) {
-            tuneCount = 0;
+            tuneCount = 1;
         }
     }
 }
@@ -154,6 +155,14 @@ void updatePaddles(int numPlayer) {
     p1.y = translateToScreen(ADCValueP1);
     if (numPlayer == 2) {
         p2.y = translateToScreen(ADCValueP2);
+    }
+}
+
+void updateVolume() {
+    if (isButtonPressed(3) && (volume + 100 <= 800)) {
+        volume += 100;
+    } else if (isButtonPressed(2) && (volume - 100 >= 2)) {
+        volume -= 100;
     }
 }
 
@@ -222,15 +231,17 @@ void timer2_interrupt_handler(void) {
     counter = GAME_SPEED;
     updatePaddles(numPlayer);
 
+    updateVolume();
+
     switch (gameState) {
         case STATE_MENU:
             updateMenu();
             drawMenu(menuState);
-            playTune(FF7prelude, 2);
+            playTune(FF7prelude, 2, volume);
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 draw(p1, p2, ball);
             }
@@ -250,7 +261,7 @@ void timer2_interrupt_handler(void) {
                 // Exit to menu if button 4 is pressed
                 if (isButtonPressed(4)) {
                     gameState = STATE_MENU;
-                    tuneCount = 0;
+                    tuneCount = 1;
                     mute();
                     drawMenu(menuState);
                 }
@@ -259,28 +270,28 @@ void timer2_interrupt_handler(void) {
             draw(p1, p2, ball);
 
             //playTune(FF7battle, 1);
-            playTune(tetris, 3);
+            playTune(tetris, 3, volume);
 
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = 0;
+                tuneCount = ;
                 mute();
                 drawEnding(p1, p2);
             }
             break;
         case STATE_START:
-            playTune(FF7prelude, 2);
+            playTune(FF7prelude, 2, volume);
             if (isButtonPressed(4)) {
                 gameState = STATE_MENU;
                 drawMenu(menuState);
             }
             break;
         case STATE_END:
-            playTune(FF7fanfare, 2);
+            playTune(FF7fanfare, 2, volume);
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 drawLogo();
             }
