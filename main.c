@@ -18,8 +18,8 @@
 #define STATE_END       2
 #define STATE_MENU      3
 
-#define MENU_MULTI      0
-#define MENU_CPUBAS     1
+#define MENU_MULTI      1
+#define MENU_CPUBAS     0
 #define MENU_CPUADV     2
 
 int gameState = STATE_START;
@@ -257,7 +257,7 @@ void timer2_interrupt_handler(void) {
             // cpu player movement
             if (menuState == MENU_CPUBAS) {
                 CPUplayer(1);
-            }else if (menuState == MENU_CPUBAS) {
+            }else if (menuState == MENU_CPUADV) {
                 CPUplayer(0);
             }
 
