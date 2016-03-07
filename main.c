@@ -24,7 +24,6 @@
 
 int gameState = STATE_START;
 int menuState = MENU_MULTI;
-int numPlayer = 0;
 int volume = 2;
 Paddle p1, p2;
 Ball ball;
@@ -131,7 +130,7 @@ int translateToScreen(int val) {
     return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
 }
 
-void updatePaddles(int numPlayer) {
+void updatePaddles() {
     int ADCValueP1, ADCValueP2;
 
     // start sampling and wait to complete
@@ -149,7 +148,7 @@ void updatePaddles(int numPlayer) {
     }
 
     p1.y = translateToScreen(ADCValueP1);
-    if (numPlayer == 2) {
+    if (menuState == MENU_MULTI) {
         p2.y = translateToScreen(ADCValueP2);
     }
 }
@@ -191,6 +190,7 @@ void updateMenu() {
     } else {
         ADCValueP1 = ADC1BUF8;
     }
+
     menuState = ((3 * ADCValueP1) / 1024);
 }
 
@@ -236,7 +236,7 @@ void timer2_interrupt_handler(void) {
 
     if (counter != 0) { return; }
     counter = GAME_SPEED;
-    updatePaddles(numPlayer);
+    updatePaddles();
     updateVolume();
 
     switch (gameState) {
@@ -253,22 +253,19 @@ void timer2_interrupt_handler(void) {
             break;
         case STATE_PONG:
             advance();
-            
-            if (menuState == MENU_MULTI) {
-                numPlayer = 2;
-            } else if (menuState == MENU_CPUBAS) {
-                numPlayer = 1;
-                CPUplayer(1); // basic CPU player
-            } else if (menuState == MENU_CPUADV) {
-                numPlayer = 1;
-                CPUplayer(0); // advanced CPU player
 
-                // Exit to menu if button 4 is pressed
-                if (isButtonPressed(4)) {
-                    gameState = STATE_MENU;
-                    resetMusic();
-                    drawMenu(menuState);
-                }
+            // cpu player movement
+            if (menuState == MENU_CPUBAS) {
+                CPUplayer(1);
+            }else if (menuState == MENU_CPUBAS) {
+                CPUplayer(0);
+            }
+
+            // check for game abort
+            if (isButtonPressed(4)) {
+                gameState = STATE_MENU;
+                resetMusic();
+                drawMenu(menuState);
             }
 
             draw(p1, p2, ball);
