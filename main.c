@@ -269,13 +269,13 @@ void timer2_interrupt_handler(void) {
 
             draw(p1, p2, ball);
 
-            //playTune(FF7battle, 1);
-            playTune(tetris, 3, volume);
+            playTune(FF7battle, 1, volume);
+            //playTune(tetris, 3, volume);
 
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = ;
+                tuneCount = 1;
                 mute();
                 drawEnding(p1, p2);
             }
