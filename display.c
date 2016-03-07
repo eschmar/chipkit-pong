@@ -206,6 +206,29 @@ void drawWinnerInverted(Paddle p1, Paddle p2) {
     }
 }
 
+/*
+ *  Print the menu
+ */
+void drawMenu(int selected) {
+    clearGame();
+    int selectItem = selected;
+    int i, j, c, x = 10;
+    
+    for (j = 0; j < 3; j++) {
+        int offset = j * 128;
+        for (c = 0; c < 13; c++) {
+            for (i = 0; i < 8; i++) {
+                if (selected == j) {
+                    game[offset + x + c * 8 + i] = ~font[items[j][c] * 8 + i];
+                } else {
+                    game[offset + x + c * 8 + i] = font[items[j][c] * 8 + i];
+                }
+            }
+        }
+    }
+    renderScreen(game);
+}
+
 /**
  *  Renders the full screen
  */

@@ -244,6 +244,56 @@ const uint8_t const minion[] = {
     0xFF, 0xFF
 };
 
+const uint8_t const items[3][13] = {
+    {'M', 'u', 'l', 't', 'i', 'p', 'l', 'a', 'y', 'e', 'r', ' ', ' '},
+    {'S', 'i', 'n', 'g', 'l', 'e', ' ', 'p', 'l', 'a', 'y', 'e', 'r'},
+    {'T', 'r', 'a', 'i', 'n', 'i', 'n', 'g', ' ', ' ', ' ', ' ', ' '}
+};
+
+int FF7prelude[] = {256,
+    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
+    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
+    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
+    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
+    C2, D2, E2, G2, C3, D3, E3, G3, C4, D4, E4, G4, C5, D5, E5, G5,
+    C6, G5, E5, D5, C5, G4, E4, D4, C4, G3, E3, D3, C3, G2, E2, D2,
+    A1, B1, C2, E2, A2, B2, C3, E3, A3, B3, C4, E4, A4, B4, C5, E5,
+    A5, E5, C5, B4, A4, E4, C4, B3, A3, E3, C3, B2, A2, E2, C2, B1,
+    A1, C2, F2, G2, A2, C3, F3, G3, A3, C4, F4, G4, A4, C5, F5, G5,
+    A5, G5, F5, C5, A4, G4, F4, C4, A3, G3, F3, C3, A2, G2, F2, C2,
+    B1, D2, G2, A2, B2, D3, G3, A3, B3, D4, G4, A4, B4, D5, G5, A5,
+    B5, A5, G5, D5, B4, A4, G4, D4, B3, A3, G3, D3, B2, A2, G2, D2,
+    AB1, C2, EB2, G2, AB2, C3, EB3, G3, AB3, C4, EB4, G4, AB4, C5, EB5, G5,
+    AB5, G5, EB5, C5, AB4, G4, EB4, C4, AB3, G3, EB3, C3, AB2, G2, EB2, C2,
+    BB1, D2, F2, A2, BB2, D3, F3, A3, BB3, D4, F4, A4, BB4, D5, F5, A5, 
+    BB5, A5, F5, D5, BB4, A4, F4, D4, BB3, A3, F3, D3, BB2, A2, F2, D2 
+};
+
+int FF7fanfare[] = {226,
+    C5, PP, C5, PP, C5, PP, C5, C5, C5, C5, AB4, AB4, AB4, AB4, BB4, BB4, BB4, BB4, // +2
+    C5, PP, BB4, C5, C5, C5, C5, C5, C5, C5, C5, C5, C5, C5, C5, C5,
+    AB4, C5, AB4, F4, AB4, PP, AB4, C5, AB4, F4, AB4, BB4, C5, BB4, AB4, F4,
+    A4, C5, A4, F4, A4, PP, A4, C5, A4, F4, A4, BB4, C5, BB4, A4, F4,
+    AB4, C5, AB4, F4, AB4, PP, AB4, C5, AB4, F4, AB4, BB4, C5, BB4, AB4, F4,
+    AB4, C5, AB4, E4, AB4, PP, AB4, C5, AB4, E4, AB4, BB4, C5, BB4, AB4, E4,
+    AB4, C5, AB4, F4, AB4, PP, AB4, C5, AB4, F4, AB4, BB4, C5, BB4, AB4, F4,
+    A4, C5, A4, F4, A4, PP, A4, C5, A4, F4, A4, BB4, C5, BB4, A4, F4,
+    BB4, DB5, BB4, GB4, BB4, PP, BB4, DB5, BB4, GB4, BB4, C5, DB5, C5, BB4, GB4,
+    BB4, DB5, BB4, GB4, BB4, PP, BB4, DB5, BB4, GB4, BB4, C5, DB5, C5, BB4, GB4,
+    BB4, D5, BB4, G4, BB4, PP, BB4, D5, BB4, G4, BB4, C5, D5, C5, BB4, G4,
+    BB4, D5, BB4, G4, BB4, PP, BB4, D5, BB4, G4, BB4, C5, D5, C5, BB4, G4,
+    PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, 
+    PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP, PP 
+};
+
+int FF7battle[] = {80,
+    F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, 
+    F5, PP, F5, PP, C5, PP, EB5, PP, GB5, PP, F5, PP, EB5, PP, GB5, PP,
+    F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP,
+    F5, PP, AB4, PP, C5, C5, C5, C5, B4, B4, B4, B4, BB4, BB4, BB4, BB4,
+    F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP, F5, PP
+};
+
 int tetris[] = {72,
     E5, E5, B4, C5, D5, D5, C5, B4, 
     A4, A4, A4, C5, E5, E5, D5, C5, 

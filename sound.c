@@ -19,7 +19,7 @@
 
 #include <pic32mx.h>
 
-int volumeSet = 500;   // MAX 2 - MIN 800
+//int volumeSet = 2;   // MAX 2 - MIN 800
 
 /*
  * Enable Timer3 in PWM mode
@@ -52,14 +52,14 @@ void mute(void) {
  * Generate sound with specific note
  * The buzzer must be connected to PIN 3
  */
-void tone(int note) {
+void tone(int note, int volumeParam) {
     if (note == 0) {
         PR3 = 0;
         OC1R = 0;
         OC1RS = 0;
     } else {
         int frequency = (int) 625000 / note;
-        int volume =  (int) frequency / volumeSet;
+        int volume =  (int) frequency / volumeParam;
 
         PR3 = frequency;
         OC1R = volume;

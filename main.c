@@ -16,8 +16,16 @@
 #define STATE_START     0
 #define STATE_PONG      1
 #define STATE_END       2
+#define STATE_MENU      3
+
+#define MENU_MULTI      0
+#define MENU_CPUBAS     1
+#define MENU_CPUADV     2
 
 int gameState = STATE_START;
+int menuState = MENU_MULTI;
+int numPlayer = 0;
+int volume = 2;
 Paddle p1, p2;
 Ball ball;
 
@@ -58,14 +66,14 @@ void advance() {
  */
 void init_game() {
     p1.x = 0;
-    p1.y = 5;
+    p1.y = 12;
     p1.score = 0;
 
     p2.x = 127;
-    p2.y = 5;
+    p2.y = 23;
     p2.score = 0;
 
-    ball.x = 60;
+    ball.x = 61;
     ball.y = 15;
     ball.speedX = 2;
     ball.speedY = 1;    
@@ -76,10 +84,10 @@ int tuneScale = 0;
 /*
  *      Plays a sequence of notes
  */
-void playTune(int tune[], int tempo) {
-    int length = tune[0];
+void playTune(int tune[], int tempo, int toneVolume) {
+    int tuneLength = tune[0];
     
-    tone(tune[tuneCount]);
+    tone(tune[tuneCount], toneVolume);
     
     if (tune[tuneCount] == 0) {
         tuneScale = tempo - 1;
@@ -89,7 +97,7 @@ void playTune(int tune[], int tempo) {
     if (tuneScale == tempo) {
     tuneScale = 0;
         tuneCount++;
-        if (tuneCount == length) {
+        if (tuneCount == tuneLength) {
             tuneCount = 1;
         }
     }
@@ -127,7 +135,7 @@ int translateToScreen(int val) {
     return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
 }
 
-void updatePaddles() {
+void updatePaddles(int numPlayer) {
     int ADCValueP1, ADCValueP2;
 
     // start sampling and wait to complete
@@ -145,7 +153,71 @@ void updatePaddles() {
     }
 
     p1.y = translateToScreen(ADCValueP1);
-    p2.y = translateToScreen(ADCValueP2);
+    if (numPlayer == 2) {
+        p2.y = translateToScreen(ADCValueP2);
+    }
+}
+
+void updateVolume() {
+    if (isButtonPressed(3) && (volume + 100 <= 800)) {
+        volume += 100;
+    } else if (isButtonPressed(2) && (volume - 100 >= 2)) {
+        volume -= 100;
+    }
+}
+
+/**
+ *  Maps the master potentiometer position to
+ *  to one of the three menu items
+ */
+void updateMenu() {
+    int ADCValueP1;
+
+    // start sampling and wait to complete
+    IFSCLR(1) = 0x0002;
+    AD1CON1SET = 0x0004;
+    while (!IFS(1) & 0x0002);
+    
+    // check which buffer to read from
+    if (AD1CON2 & 0x0080) {
+        ADCValueP1 = ADC1BUF0;
+    } else {
+        ADCValueP1 = ADC1BUF8;
+    }
+    menuState = ((3 * ADCValueP1) / 1024);
+}
+
+int direction = 0;
+int targetCoord = 0;
+/**
+ *  Generate a CPU player at two levels: basic and advanced (always correct)
+ */
+void CPUplayer(int level) {
+    if (level == 1) {
+        if (ball.y == 0) {
+            direction = 1;
+        } else if (ball.y == MAX_Y - 1) {
+            direction = -1;
+        }
+
+        if (direction == 1 && p2.y < 23 && ball.x > 100) {
+            p2.y++;
+        } else if (direction == -1 && p2.y > 0 && ball.x > 100) {
+            p2.y--;
+        }
+    } else if (level == 0) {
+        if (ball.x == 63 && ball.speedX > 0) {
+            targetCoord = MAX_Y - 1 - ball.y;
+        } else if (ball.x == 64 && ball.speedX > 0) {
+            targetCoord = MAX_Y - 1 - (ball.y - (direction));
+        }
+        
+        if (p2.y < 23 && p2.y + 4 < targetCoord) {
+            p2.y++;
+        } else if (p2.y > 0 && p2.y + 4 > targetCoord) {
+            p2.y--;
+        }
+    }
 }
 
 /**
@@ -157,37 +229,69 @@ void timer2_interrupt_handler(void) {
 
     if (counter != 0) { return; }
     counter = GAME_SPEED;
-    updatePaddles();
+    updatePaddles(numPlayer);
+
+    updateVolume();
 
     switch (gameState) {
+        case STATE_MENU:
+            updateMenu();
+            drawMenu(menuState);
+            playTune(FF7prelude, 2, volume);
+            if (isButtonPressed(4)) {
+                init_game();
+                gameState = STATE_PONG;
+                tuneCount = 1;
+                mute();
+                draw(p1, p2, ball);
+            }
+            break;
         case STATE_PONG:
             advance();
+            
+            if (menuState == MENU_MULTI) {
+                numPlayer = 2;
+            } else if (menuState == MENU_CPUBAS) {
+                numPlayer = 1;
+                CPUplayer(1); // basic CPU player
+            } else if (menuState == MENU_CPUADV) {
+                numPlayer = 1;
+                CPUplayer(0); // advanced CPU player
+
+                // Exit to menu if button 4 is pressed
+                if (isButtonPressed(4)) {
+                    gameState = STATE_MENU;
+                    tuneCount = 1;
+                    mute();
+                    drawMenu(menuState);
+                }
+            }
+
             draw(p1, p2, ball);
 
-            playTune(tetris, 3);
+            playTune(FF7battle, 1, volume);
+            //playTune(tetris, 3, volume);
 
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 drawEnding(p1, p2);
             }
             break;
         case STATE_START:
-            playTune(starWars, 3);
+            playTune(FF7prelude, 2, volume);
             if (isButtonPressed(4)) {
-                init_game();
-                gameState = STATE_PONG;
-                tuneCount = 0;
-                mute();
-                draw(p1, p2, ball);
+                gameState = STATE_MENU;
+                drawMenu(menuState);
             }
             break;
         case STATE_END:
+            playTune(FF7fanfare, 2, volume);
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
-                tuneCount = 0;
+                tuneCount = 1;
                 mute();
                 drawLogo();
             }
