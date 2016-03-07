@@ -244,10 +244,11 @@ const uint8_t const minion[] = {
     0xFF, 0xFF
 };
 
-const uint8_t const items[3][13] = {
-    {'M', 'u', 'l', 't', 'i', 'p', 'l', 'a', 'y', 'e', 'r', ' ', ' '},
-    {'S', 'i', 'n', 'g', 'l', 'e', ' ', 'p', 'l', 'a', 'y', 'e', 'r'},
-    {'T', 'r', 'a', 'i', 'n', 'i', 'n', 'g', ' ', ' ', ' ', ' ', ' '}
+const short const menuLength = 9;
+const uint8_t const menu[3][13] = {
+    {'1', '-', 'P', 'L', 'A', 'Y', 'E', 'R', ' '},
+    {'2', '-', 'P', 'L', 'A', 'Y', 'E', 'R', 'S'},
+    {'T', 'r', 'a', 'i', 'n', 'i', 'n', 'g', ' '}
 };
 
 int FF7prelude[] = {256,
@@ -320,4 +321,35 @@ int starWars[] = {112,
     F4, E4, F4, D4, D4, D4, PP, PP,
     PP, PP, PP, PP, PP, PP, PP, PP,
     PP, PP, PP, PP, PP, PP, PP, PP
+};
+
+int symphony[] = {470, 
+    D5, PP, C5, PP, B4, PP, A4, PP, G4, PP, G4,
+    PP, E4, PP, D4, PP, C4, PP, B3, PP, A3, PP, C4, PP, E4, PP, G4, PP,
+    A3, PP, C4, PP, E4, PP, C4, PP, E4, PP, C4, PP, D4, PP, E4, PP, E4,
+    PP, D4, PP, E4, PP, G4, PP, E4, PP, G4, PP, E4, PP, E4, PP, C4, PP,
+    A3, PP, G3, PP, G3, PP, A3, PP, C4, PP, E4, PP, G4, PP, A3, PP, C4,
+    PP, E4, PP, C4, PP, E4, PP, C4, PP, D4, PP, E4, PP, E4, PP, D4, PP,
+    E4, PP, G4, PP, E4, PP, G4, PP, E4, PP, E4, PP, C4, PP, A3, PP, G3,
+    PP, G3, PP, G3, PP, B3, PP, D4, PP, F4, PP, D4, PP, B3, PP, G3, PP,
+    A3, PP, E3, PP, A3, PP, C4, PP, B3, PP, D4, PP, F4, PP, A4, PP, F4,
+    PP, D4, PP, B3, PP, C4, PP, C4, PP, B3, PP, C4, PP, D4, PP, C4, PP,
+    G3, PP, B3, PP, D4, PP, F4, PP, D4, PP, B3, PP, G3, PP, A3, PP, E3,
+    PP, A3, PP, C4, PP, D4, PP, D4, PP, C4, PP, D4, PP, E4, PP, D4, PP,
+    E4, PP, D4, PP, D4, PP, C4, PP, B3, PP, A3, PP, G3, PP, F3, PP, A3,
+    PP, C4, PP, E4, PP, G4, PP, A3, PP, C4, PP, E4, PP, C4, PP, E4, PP,
+    C4, PP, D4, PP, E4, PP, E4, PP, D4, PP, E4, PP, G4, PP, E4, PP, G4,
+    PP, E4, PP, E4, PP, C4, PP, A3, PP, G3, PP, G3, PP, A3, PP, C4, PP,
+    E4, PP, G4, PP, A3, PP, C4, PP, E4, PP, C4, PP, E4, PP, C4, PP, D4,
+    PP, E4, PP, E4, PP, D4, PP, E4, PP, G4, PP, E4, PP, G4, PP, E4, PP,
+    E4, PP, C4, PP, A3, PP, G3, PP, G3, PP, G3, PP, B3, PP, D4, PP, F4,
+    PP, D4, PP, B3, PP, G3, PP, A3, PP, E3, PP, A3, PP, C4, PP, B3, PP,
+    D4, PP, F4, PP, A4, PP, F4, PP, D4, PP, B3, PP, C4, PP, C4, PP, B3,
+    PP, C4, PP, D4, PP, C4, PP, G3, PP, B3, PP, D4, PP, F4, PP, D4, PP,
+    B3, PP, G3, PP, A3, PP, E3, PP, A3, PP, C4, PP, D4, PP, D4, PP, C4,
+    PP, D4, PP, E4, PP, D4, PP, E4, PP, D4, PP, D4, PP, C4, PP, B3, PP,
+    A3, PP, G3, PP, F3, PP, E4, PP, C8, PP, B7, PP, A7, PP, G7, PP, F7,
+    PP, E7, PP, D7, PP, C7, PP, B6, PP, A6, PP, G6, PP, G6, PP, E6, PP,
+    D6, PP, C6, PP, B5, PP, A5, PP, G5, PP, G5, PP, E5, PP, D5, PP, C5,
+    PP, B4, PP, A4, PP, G4, PP, G4, PP, E4, PP, D4, PP, C4, PP, B3, PP
 };

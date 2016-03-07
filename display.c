@@ -23,7 +23,7 @@
 uint8_t game[128*4] = {0};
 
 /*
- *  Simple delay
+ * Simple delay
  */
 void delay(int cyc) {
     int i;
@@ -31,7 +31,7 @@ void delay(int cyc) {
 }
 
 /*
- *  SPI send/receive
+ * SPI send/receive
  */
 uint8_t spi_send_recv(uint8_t data) {
     while(!(SPI2STAT & 0x08));
@@ -41,7 +41,7 @@ uint8_t spi_send_recv(uint8_t data) {
 }
 
 /*
- *  Enable SPI
+ * Enable SPI
  */
 void spi_init() {
     /* Set up peripheral bus clock */
@@ -80,7 +80,7 @@ void spi_init() {
 }
 
 /*
- *  Display startup procedure
+ * Display startup procedure
  */
 void display_wakeup() {
     DISPLAY_COMMAND_DATA_PORT &= ~DISPLAY_COMMAND_DATA_MASK;
@@ -113,9 +113,9 @@ void display_wakeup() {
 }
 
 /*
- *  Draw single pixel on display by
- *  converting coordinates to SPI
- *  compatible format.
+ * Draw single pixel on display by
+ * converting coordinates to SPI
+ * compatible format.
  */
 void lightUpPixel(int x, int y) {
     short offset = 0;
@@ -124,7 +124,7 @@ void lightUpPixel(int x, int y) {
 }
 
 /*
- *  Draw paddle
+ * Draw paddle
  */
 void drawPaddle(Paddle p) {
     int i;
@@ -134,14 +134,14 @@ void drawPaddle(Paddle p) {
 }
 
 /*
- *  Draw ball
+ * Draw ball
  */
 void drawBall(Ball b) {
     lightUpPixel(b.x, b.y);
 }
 
 /*
- *  Reset display
+ * Reset display
  */
 void clearGame() {
     int i;
@@ -149,7 +149,7 @@ void clearGame() {
 }
 
 /*
- *  Print current score
+ * Print current score
  */
 void drawScore(Paddle p1, Paddle p2) {
     int i, x = 52;
@@ -175,7 +175,7 @@ void drawScore(Paddle p1, Paddle p2) {
 }
 
 /*
- *  Print who won
+ * Print who won
  */
 void drawWinner(Paddle p1, Paddle p2) {
     int winner = p1.score > p2.score ? 1 : 2;
@@ -191,7 +191,7 @@ void drawWinner(Paddle p1, Paddle p2) {
 }
 
 /*
- *  Print who won inverted
+ * Print who won inverted
  */
 void drawWinnerInverted(Paddle p1, Paddle p2) {
     int winner = p1.score > p2.score ? 1 : 2;
@@ -207,30 +207,30 @@ void drawWinnerInverted(Paddle p1, Paddle p2) {
 }
 
 /*
- *  Print the menu
+ * Print the menu
  */
 void drawMenu(int selected) {
     clearGame();
-    int selectItem = selected;
-    int i, j, c, x = 10;
-    
-    for (j = 0; j < 3; j++) {
-        int offset = j * 128;
-        for (c = 0; c < 13; c++) {
-            for (i = 0; i < 8; i++) {
-                if (selected == j) {
-                    game[offset + x + c * 8 + i] = ~font[items[j][c] * 8 + i];
-                } else {
-                    game[offset + x + c * 8 + i] = font[items[j][c] * 8 + i];
+    int offset = (((128 / 8) - menuLength) / 2) * 8;
+
+    int i, j, f;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < menuLength; j++) {
+            for (f = 0; f < 8; f++) {
+                if (selected == i && menu[i][j] != ' ') {
+                    game[offset + i * 128 + j * 8 + f] = ~font[menu[i][j] * 8 + f];
+                }else {
+                    game[offset + i * 128 + j * 8 + f] = font[menu[i][j] * 8 + f];
                 }
             }
         }
     }
+
     renderScreen(game);
 }
 
 /**
- *  Renders the full screen
+ * Renders the full screen
  */
 void renderScreen(uint8_t arr[]) {
     int i, j;
@@ -251,7 +251,7 @@ void renderScreen(uint8_t arr[]) {
 }
 
 /*
- *  Send the next frame to the display
+ * Send the next frame to the display
  */
 void draw(Paddle p1, Paddle p2, Ball ball) {
     int i, j;
@@ -266,14 +266,14 @@ void draw(Paddle p1, Paddle p2, Ball ball) {
 }
 
 /*
- *  Starting screen
+ * Starting screen
  */
 void drawLogo() {
     renderScreen(logo);
 }
 
 /*
- *  Ending Screen
+ * Ending Screen
  */
 void drawEnding(Paddle p1, Paddle p2) {
     clearGame();

@@ -30,7 +30,7 @@ Paddle p1, p2;
 Ball ball;
 
 /*
- *    One frame of the game
+ * One frame of the game
  */
 void advance() {
     ball.x = (ball.x + ball.speedX);
@@ -62,7 +62,7 @@ void advance() {
 }
 
 /*
- *    Set up game configuration
+ * Set up game configuration
  */
 void init_game() {
     p1.x = 0;
@@ -82,11 +82,10 @@ void init_game() {
 int tuneCount = 1;
 int tuneScale = 0;
 /*
- *      Plays a sequence of notes
+ * Plays a single note. Call repetitively for
+ * music sequences.
  */
 void playTune(int tune[], int tempo, int toneVolume) {
-    int tuneLength = tune[0];
-    
     tone(tune[tuneCount], toneVolume);
     
     if (tune[tuneCount] == 0) {
@@ -95,16 +94,13 @@ void playTune(int tune[], int tempo, int toneVolume) {
     
     tuneScale++;
     if (tuneScale == tempo) {
-    tuneScale = 0;
-        tuneCount++;
-        if (tuneCount == tuneLength) {
-            tuneCount = 1;
-        }
+        tuneScale = 0;
+        tuneCount = (tuneCount + 1) % tune[0];
     }
 }
 
 /*
- *    Initialise
+ * Initialise
  */
 int main(void) {
     spi_init();
@@ -129,7 +125,7 @@ int main(void) {
 int counter = GAME_SPEED;
 
 /**
- *  Linear mapping from [0,1023] to valid paddle position
+ * Linear mapping from [0,1023] to valid paddle position
  */
 int translateToScreen(int val) {
     return val > 0 ? ((MAX_Y - PADDLE_HEIGHT) * val) / 1024 : 0;
@@ -158,6 +154,9 @@ void updatePaddles(int numPlayer) {
     }
 }
 
+/**
+ * Increases (BTN3) or decreases (BTN2) music volume
+ */
 void updateVolume() {
     if (isButtonPressed(3) && (volume + 100 <= 800)) {
         volume += 100;
@@ -167,8 +166,16 @@ void updateVolume() {
 }
 
 /**
- *  Maps the master potentiometer position to
- *  to one of the three menu items
+ * Resets music 
+ */
+void resetMusic() {
+    tuneCount = 1;
+    mute();
+}
+
+/**
+ * Maps the master potentiometer position to
+ * to one of the three menu items
  */
 void updateMenu() {
     int ADCValueP1;
@@ -230,7 +237,6 @@ void timer2_interrupt_handler(void) {
     if (counter != 0) { return; }
     counter = GAME_SPEED;
     updatePaddles(numPlayer);
-
     updateVolume();
 
     switch (gameState) {
@@ -241,8 +247,7 @@ void timer2_interrupt_handler(void) {
             if (isButtonPressed(4)) {
                 init_game();
                 gameState = STATE_PONG;
-                tuneCount = 1;
-                mute();
+                resetMusic();
                 draw(p1, p2, ball);
             }
             break;
@@ -261,22 +266,18 @@ void timer2_interrupt_handler(void) {
                 // Exit to menu if button 4 is pressed
                 if (isButtonPressed(4)) {
                     gameState = STATE_MENU;
-                    tuneCount = 1;
-                    mute();
+                    resetMusic();
                     drawMenu(menuState);
                 }
             }
 
             draw(p1, p2, ball);
-
-            playTune(FF7battle, 1, volume);
-            //playTune(tetris, 3, volume);
+            playTune(symphony, 1, volume);
 
             // game end?
             if (p1.score >= GAME_WIN_SCORE || p2.score >= GAME_WIN_SCORE) {
                 gameState = STATE_END;
-                tuneCount = 1;
-                mute();
+                resetMusic();
                 drawEnding(p1, p2);
             }
             break;
@@ -291,8 +292,7 @@ void timer2_interrupt_handler(void) {
             playTune(FF7fanfare, 2, volume);
             if (isButtonPressed(4)) {
                 gameState = STATE_START;
-                tuneCount = 1;
-                mute();
+                resetMusic();
                 drawLogo();
             }
             break;
@@ -302,9 +302,7 @@ void timer2_interrupt_handler(void) {
 /**
  * ISR Interrupt handler for timer 3
  */
-void timer3_interrupt_handler(void) {
-    // IFSCLR(0) = 0x1000;
-}
+void timer3_interrupt_handler(void) {}
 
 /**
  * ISR general interrupt handler
