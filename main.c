@@ -199,31 +199,49 @@ int targetCoord = 0;
 /**
  *  Generate a CPU player at two levels: basic and advanced (always correct)
  */
-void CPUplayer(int level) {
-    if (level == 1) {
-        if (ball.y == 0) {
-            direction = 1;
-        } else if (ball.y == MAX_Y - 1) {
-            direction = -1;
-        }
+void updateCpuPlayer() {
+    int offset, side, estimate, max;
+    max = MAX_Y - PADDLE_HEIGHT;
+    switch(menuState) {
+        case MENU_CPUBAS:
+            if (ball.y == 0) {
+                direction = 1;
+            } else if (ball.y == MAX_Y - 1) {
+                direction = -1;
+            }
 
-        if (direction == 1 && p2.y < 23 && ball.x > 100) {
-            p2.y++;
-        } else if (direction == -1 && p2.y > 0 && ball.x > 100) {
-            p2.y--;
-        }
-    } else if (level == 0) {
-        if (ball.x == 63 && ball.speedX > 0) {
-            targetCoord = MAX_Y - 1 - ball.y;
-        } else if (ball.x == 64 && ball.speedX > 0) {
-            targetCoord = MAX_Y - 1 - (ball.y - (direction));
-        }
-        
-        if (p2.y < 23 && p2.y + 4 < targetCoord) {
-            p2.y++;
-        } else if (p2.y > 0 && p2.y + 4 > targetCoord) {
-            p2.y--;
-        }
+            if (direction == 1 && p2.y < 23 && ball.x > 100) {
+                p2.y++;
+            } else if (direction == -1 && p2.y > 0 && ball.x > 100) {
+                p2.y--;
+            }
+            break;
+
+        case MENU_CPUADV:
+            if (ball.x == 63 && ball.speedX > 0) {
+                targetCoord = MAX_Y - 1 - ball.y;
+            } else if (ball.x == 64 && ball.speedX > 0) {
+                targetCoord = MAX_Y - 1 - (ball.y - (direction));
+            }
+            
+            if (p2.y < 23 && p2.y + 4 < targetCoord) {
+                p2.y++;
+            } else if (p2.y > 0 && p2.y + 4 > targetCoord) {
+                p2.y--;
+            }
+            break;
+        default:
+            // predict y position
+            offset = ball.y - (ball.speedX / ball.speedY) * ball.x;
+            side = ball.speedX > 0 ? MAX_X : 0;
+            estimate = (ball.speedX / ball.speedY) * side + offset;
+
+            // move paddle
+            if (estimate > ball.y && p2.y < max) {
+                p2.y++;
+            }else if (estimate < ball.y && p2.y > 0) {
+                p2.y--;
+            }
     }
 }
 
@@ -255,10 +273,8 @@ void timer2_interrupt_handler(void) {
             advance();
 
             // cpu player movement
-            if (menuState == MENU_CPUBAS) {
-                CPUplayer(1);
-            }else if (menuState == MENU_CPUADV) {
-                CPUplayer(0);
+            if (menuState == MENU_CPUBAS || menuState == MENU_CPUADV) {
+                updateCpuPlayer();
             }
 
             // check for game abort
