@@ -242,7 +242,7 @@ void timer2_interrupt_handler(void) {
     switch (gameState) {
         case STATE_MENU:
             updateMenu();
-            drawMenu(menuState);
+            renderMenu(menuState);
             playTune(FF7prelude, 2, volume);
             if (isButtonPressed(4)) {
                 init_game();
@@ -265,7 +265,7 @@ void timer2_interrupt_handler(void) {
             if (isButtonPressed(4)) {
                 gameState = STATE_MENU;
                 resetMusic();
-                drawMenu(menuState);
+                renderMenu(menuState);
             }
 
             draw(p1, p2, ball);
@@ -282,7 +282,7 @@ void timer2_interrupt_handler(void) {
             playTune(FF7prelude, 2, volume);
             if (isButtonPressed(4)) {
                 gameState = STATE_MENU;
-                drawMenu(menuState);
+                renderMenu(menuState);
             }
             break;
         case STATE_END:

@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 extern const uint8_t const font[];
-extern const uint8_t const logo[];
-extern const uint8_t const minion[];
+extern uint8_t logo[];
+extern uint8_t minion[];
 extern const uint8_t const menu[3][13];
 extern const short const menuLength;
 

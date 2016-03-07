@@ -206,29 +206,6 @@ void drawWinnerInverted(Paddle p1, Paddle p2) {
     }
 }
 
-/*
- * Print the menu
- */
-void drawMenu(int selected) {
-    clearGame();
-    int offset = (((128 / 8) - menuLength) / 2) * 8;
-
-    int i, j, f;
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < menuLength; j++) {
-            for (f = 0; f < 8; f++) {
-                if (selected == i && menu[i][j] != ' ') {
-                    game[offset + i * 128 + j * 8 + f] = ~font[menu[i][j] * 8 + f];
-                }else {
-                    game[offset + i * 128 + j * 8 + f] = font[menu[i][j] * 8 + f];
-                }
-            }
-        }
-    }
-
-    renderScreen(game);
-}
-
 /**
  * Renders the full screen
  */
@@ -248,6 +225,29 @@ void renderScreen(uint8_t arr[]) {
         for(j = 0; j < 128; j++)
             spi_send_recv(arr[i*128 + j]);
     }
+}
+
+/*
+ * Print the menu
+ */
+void renderMenu(int selected) {
+    clearGame();
+    int offset = (((128 / 8) - menuLength) / 2) * 8;
+
+    int i, j, f;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < menuLength; j++) {
+            for (f = 0; f < 8; f++) {
+                if (selected == i && menu[i][j] != ' ') {
+                    game[offset + i * 128 + j * 8 + f] = ~font[menu[i][j] * 8 + f];
+                }else {
+                    game[offset + i * 128 + j * 8 + f] = font[menu[i][j] * 8 + f];
+                }
+            }
+        }
+    }
+
+    renderScreen(game);
 }
 
 /*
