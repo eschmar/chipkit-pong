@@ -2,11 +2,7 @@
 The classical arcade video game implemented on a ChipKit Uno32 microcontroller.
 
 ![screenshot0](media/chipkit_pong_2.jpg)
-
-[<img width='24%' src='media/chipkit_pong_2.jpg'/>](media/chipkit_pong_2.jpg)
-[<img width='25%' src='media/chipkit_pong_1.jpg'/>](media/chipkit_pong_1.jpg)
-[<img width='25%' src='media/chipkit_pong_2.jpg'/>](media/chipkit_pong_2.jpg)
-[<img width='24%' src='media/chipkit_pong_2.jpg'/>](media/chipkit_pong_2.jpg)
+![screenshot0](media/chipkit_pong_1.jpg)
 
 ## Requirements
 * [chipKIT™ Uno32 by Digilent](http://chipkit.net/wpcproduct/chipkit-uno32/)
